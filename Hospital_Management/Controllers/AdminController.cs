@@ -39,7 +39,7 @@ namespace Hospital_Management.Controllers
                 }
                 else
                 {
-                    TempData["IsLogin"] = "Invalid User";
+                    TempData["IsLogin"] = "Invalid User...";
                     return View("Login");
                 }
             }
