@@ -6,5 +6,6 @@
         public string ?DepartmentName { get; set; }
         public string ?Description { get; set; }
         public DateTime? Modified { get; set; }
+        public int UserID{ get; set; }
     }
 }

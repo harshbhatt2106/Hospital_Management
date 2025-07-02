@@ -1,4 +1,5 @@
 ﻿using Hospital_Management.CommonMethod;
+using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
@@ -10,6 +11,11 @@ namespace Hospital_Management.Controllers
     {
         public static List<Department> departmentList = Helper_Method.GetDepartmentList();
 
+        private readonly IDepartmentService _service;
+        public DepartmentController(IDepartmentService departmentService)
+        {
+            _service = departmentService;
+        }
         [Route("/Department/DepartmentList")]
         public IActionResult DepartmentList()
         {
@@ -25,48 +31,36 @@ namespace Hospital_Management.Controllers
 
         [HttpPost]
         [Route("/Department/AddDepartment")]
-        public IActionResult AddDepartment(string DepartmentName, string Description)
+        public IActionResult AddDepartment(Department department)
         {
+            int? _userid = HttpContext.Session.GetInt32("UserID");
+            department.UserID = _userid ?? 0;
+
             TempData["Message"] = null;
-            if (Helper_Method.CheckDepartmentExitsOrNot(DepartmentName))
+            if (_service.CheckDepartment(department.DepartmentName))
             {
                 TempData["Message"] = "Department Already Exits....";
                 TempData["Status"] = true;
             }
             else if (ModelState.IsValid)
             {
-                string procedure = "SP_Add_Department";
-                string _description = Description;
-                string _Departmentname = DepartmentName;
-                DateTime? _date = DateTime.Now;
-                int? UserID = HttpContext.Session.GetInt32("UserID");
-
-                SqlParameter[] sqlParameters = new SqlParameter[]
-                {
-                    new SqlParameter("@DepartmentName",_Departmentname),
-                    new SqlParameter("@Description",Description),
-                    new SqlParameter("@Modified",_date),
-                    new SqlParameter("@UserID",UserID),
-                };
-                bool result = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
-                if (result)
-                {
-                    TempData["Message"] = "SuccessFaully Added...";
-                    TempData["Status"] = false;
-                }
+                _service.AddDepartment(department);
+                TempData["Message"] = "SuccessFaully Added...";
+                TempData["Status"] = false;
             }
+                 
             return View("AddDepartment");
         }
 
-        [Route("/Department/Edit")]        
+        [Route("/Department/Edit")]
         public IActionResult EditDepartment(int id)
         {
-            var data  = departmentList.Find(x => x.DepartmentID == id);
+            var data = departmentList.Find(x => x.DepartmentID == id);
             return View(data);
         }
 
         [HttpPost]
-        [Route("/Department/Update")]        
+        [Route("/Department/Update")]
         public IActionResult EditDepartment(Department dept)
         {
             string procedure = "SP_Update_Departement";
@@ -76,7 +70,7 @@ namespace Hospital_Management.Controllers
                 new SqlParameter("@DepartmentName",dept.DepartmentName),
                 new SqlParameter("@DepartmentID",dept.DepartmentID),
             };
-            bool IsUpdated =  DBHelper.ExecuteNonQuery(procedure,sqlParameters);
+            bool IsUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
             if (IsUpdated)
             {
                 TempData["Department_Update_Message"] = "Department Data Updated SuccessFully.....";

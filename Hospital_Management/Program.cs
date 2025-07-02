@@ -1,3 +1,6 @@
+using Hospital_Management.CommonMethod_Class;
+using Hospital_Management.Interfaces;
+
 namespace Hospital_Management
 {
     public class Program
@@ -15,13 +18,14 @@ namespace Hospital_Management
 
             builder.Services.AddControllersWithViews();
 
-
+            builder.Services.AddSingleton<IDepartmentService,DepartmentServices>();
             var app = builder.Build();
 
             app.UseStatusCodePagesWithReExecute("/Error/InvalidURL");
             app.UseExceptionHandler("/Error/General");
+
             if (!app.Environment.IsDevelopment())
-            {
+            {               
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -37,7 +41,8 @@ namespace Hospital_Management
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Admin}/{action=Login}/{id?}");
+                pattern: "{controller=Try}/{action=Index}/{id?}"
+            );
 
             app.Run();
 

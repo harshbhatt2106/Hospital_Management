@@ -34,7 +34,6 @@ namespace Hospital_Management.Controllers
                 if (admin != null)
                 {
                     HttpContext.Session.SetInt32("UserID", admin.UserID);
-                    TempData["IsLogin"] = "User Valid";
                     return View("AdminDashboard");
                 }
                 else

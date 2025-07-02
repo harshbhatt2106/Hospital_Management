@@ -1,5 +1,4 @@
 ﻿using Hospital_Management.Models;
-using NuGet.Protocol;
 using System.Data.SqlClient;
 
 namespace Hospital_Management.CommonMethod
@@ -27,35 +26,34 @@ namespace Hospital_Management.CommonMethod
                 return null;
             }
         }
-        public static bool CheckDepartmentExitsOrNot(string DepartmentName)
-        {
-            SqlDataReader? reader = null;
-            try
-            {
-                string procedure = "SP_Department_IsExits";
-                SqlParameter[] parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@DName",DepartmentName.ToUpper())
-                };
-                reader = DBHelper.ExecuteReder(procedure, parameters);
-                if (reader.HasRows)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            finally
-            {
-                reader.Close();
-            }
-        }
+        //public static bool CheckDepartmentExitsOrNot(string DepartmentName)
+        //{
+        //    //SqlDataReader? reader = null;
+        //    //try
+        //    //{
+        //    //    string procedure = "SP_Department_IsExits";
+        //    //    SqlParameter[] parameters = new SqlParameter[]
+        //    //    {
+        //    //        new SqlParameter("@DName",DepartmentName.ToUpper())
+        //    //    };
+        //    //    reader = DBHelper.ExecuteReder(procedure, parameters);
+        //    //    if (reader.HasRows)
+        //    //    {
+        //    //        return true;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        return false;
+        //    //    }
+        //    //}
+        //    //finally
+        //    //{
+        //    //    reader.Close();
+        //    //}
+        //}
 
         public static List<Department> GetDepartmentList()
         {
-
             SqlDataReader? reader = null;
             try
             {
