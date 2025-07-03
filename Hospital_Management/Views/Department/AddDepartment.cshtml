@@ -49,6 +49,11 @@
         {
             return confirm("Do you confirm?");
         }
+        const inputs = document.querySelectorAll('textarea,input');
+             inputs.forEach(i => {
+            i.value = '';
+        });
+
     </script>
 
     @section Scripts

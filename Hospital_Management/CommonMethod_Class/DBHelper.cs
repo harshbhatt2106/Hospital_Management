@@ -4,13 +4,13 @@ using Hospital_Management.CommonMethod_Class;
 namespace Hospital_Management.CommonMethod
 {
     public static class DBHelper
-    {             
+    {
         public static SqlDataReader ExecuteReder(string procedure, SqlParameter[]? parameters = null)
-        {           
+        {
             try
             {
-                var sqlCommand = new SqlCommand();
-                return sqlCommand.ExecuteProceduteReader(procedure,parameters);
+                SqlCommand sqlCommand = new SqlCommand();
+                return sqlCommand.ExecuteProceduteReader(procedure, parameters);
             }
             catch (Exception ex)
             {
@@ -21,7 +21,7 @@ namespace Hospital_Management.CommonMethod
         {
             try
             {
-                var sqlCommand = new SqlCommand();
+                SqlCommand sqlCommand = new SqlCommand();
                 return sqlCommand.ExecuteProcedureNonQuery(Procedure, parameters);
             }
             catch (Exception ex)

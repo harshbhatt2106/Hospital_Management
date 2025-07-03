@@ -8,25 +8,14 @@ namespace Hospital_Management.CommonMethod_Class
 
     public class DepartmentServices : IDepartmentService
     {
-
-        //private readonly IDepartmentService _departmentService;
-
         private List<Department> _departments = new();
-
-        //public DepartmentServices(IDepartmentService departmentService)
-        //{
-        //    _departmentService = departmentService;
-        //}
-
 
         public List<Department> departments()
         {
-            SqlDataReader? reader = null;
-            try
+            _departments.Clear();
+            string procedure = "SP_GetAllDepartment";
+            using (SqlDataReader reader = DBHelper.ExecuteReder(procedure))
             {
-                _departments.Clear();
-                string procedure = "SP_GetAllDepartment";
-                reader = DBHelper.ExecuteReder(procedure);
                 while (reader.Read())
                 {
                     Department d = new Department()
@@ -38,12 +27,8 @@ namespace Hospital_Management.CommonMethod_Class
                     };
                     _departments.Add(d);
                 }
-                return _departments;
             }
-            finally
-            {
-                reader?.Close();
-            }
+            return _departments;
         }
 
         public bool AddDepartment(Department department)
@@ -56,15 +41,9 @@ namespace Hospital_Management.CommonMethod_Class
                 new SqlParameter("@Modified", DateTime.Now),
                 new SqlParameter("@UserID", department.UserID)
             };
-            bool i = DBHelper.ExecuteNonQuery(procedure, parameters);
-            if (i)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            bool isAdded = DBHelper.ExecuteNonQuery(procedure, parameters);
+            //ReloadDepartments();
+            return isAdded;
         }
 
         public bool CheckDepartment(string DepartmentName)
@@ -92,24 +71,36 @@ namespace Hospital_Management.CommonMethod_Class
                 reader?.Close();
             }
         }
+        public bool DeleteDepartment(int departmentId)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                new SqlParameter("@DID",departmentId)
+            };
+            string Procedure = "SP_Delete_Department";
+            bool Isdeleted = DBHelper.ExecuteNonQuery(Procedure, sqlParameters);
+            ReloadDepartments();
+
+            return Isdeleted;
+        }
 
 
+        public void ReloadDepartments()
+        {
+            _departments =  departments();
+        }
 
-
-        //public bool DeleteDepartment(Department department)
-        //{
-        //    return _departmentService.DeleteDepartment(department);
-        //}
-
-
-        //public void ReloadDepartments()
-        //{
-        //    _departmentService.ReloadDepartments();
-        //}
-
-        //public bool UpdateDepartment(Department department)
-        //{
-        //    return _departmentService.UpdateDepartment(department);
-        //}
+        public bool UpdateDepartment(Department department)
+        {
+            string procedure = "SP_Update_Departement";
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                new SqlParameter ("@Description",department.Description),
+                new SqlParameter("@DepartmentName",department.DepartmentName),
+                new SqlParameter("@DepartmentID",department.DepartmentID),
+            };
+            bool isUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
+            return isUpdated;
+        }
     }
 }

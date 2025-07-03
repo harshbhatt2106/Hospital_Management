@@ -14,14 +14,14 @@
 
         <div class="card-body">
             <form asp-action="Update" class="row g-3">
-                
+
                 @* Hidden ID *@
                 <input type="hidden" asp-for="DepartmentID" />
 
                 <div class="col-md-12">
                     <label asp-for="DepartmentName" class="form-label fw-semibold">Department Name</label>
-                    <input asp-for="DepartmentName" class="form-control" placeholder="Enter department name" />
-                    <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                    <input asp-for="DepartmentName" id="deptName" class="form-control" placeholder="Enter department name" />
+                    <span asp-validation-for="DepartmentName" id="deptError" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12">
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="col-12 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success me-2">
+                    <button type="submit" id="sub" class="btn btn-success me-2">
                         <i class="fas fa-save me-1"></i> Update
                     </button>
                     <a asp-action="DepartmentList" class="btn btn-secondary">
@@ -43,6 +43,51 @@
     </div>
 </div>
 
-@section Scripts {
+@section Scripts
+{
+    <script>
+
+       const deptName = document.getElementById('deptName');
+        const deptError = document.getElementById('deptError');
+        const btn = document.getElementById("sub");
+        const orignol = deptName.value;
+
+        deptName.addEventListener('blur',function()
+        {
+           let current = deptName.value;
+           
+           if(deptName.value.trim()==='')
+           {
+                deptError.textContent = "please Fill blank"
+                return;
+           }
+
+            if(orignol==current)
+            {
+                btn.disabled = false;
+                return;
+            }
+
+            const val = deptName.value.trim();
+               fetch('/Department/DepartmentExits/' + encodeURIComponent(val),{})
+                .then(res=>res.json())
+                .then(data=>{
+                    if(data==true)
+                    {
+                        deptError.textContent = "Department Alreadt Exist";
+                        btn.disabled = true;
+                    }
+                    else
+                    {
+                        deptError.textContent = "";
+                        btn.disabled = false;
+                    }
+                })
+                .catch(() => {
+                    deptError.textContent = "Server error!";
+                });
+
+        })
+    </script>
     <partial name="_ValidationScriptsPartial" />
 }

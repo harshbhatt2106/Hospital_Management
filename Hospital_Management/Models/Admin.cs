@@ -14,40 +14,6 @@ namespace Hospital_Management.Models
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public static List<Admin> admins = new List<Admin>() { };
-
-        public static void GetAllAdmin()
-        {
-            admins.Clear();
-            string procedure = "SP_GetAllData_User";
-            SqlDataReader ?reader = null;
-            try
-            {
-                reader = DBHelper.ExecuteReder(procedure);
-                while (reader.Read())
-                {
-                    Admin admin = new Admin()
-                    {
-                        UserID = Convert.ToInt32(reader["UserID"]),
-                        UserName = reader["UserName"].ToString(),
-                        Password = reader["Password"].ToString(),
-                        Email = reader["Email"].ToString(),
-                        MobileNo = reader["MobileNo"].ToString(),
-                        IsActive = Convert.ToInt32(reader["IsActive"]),
-                        Created = Convert.ToDateTime(reader["Created"]),
-                        Modified = Convert.ToDateTime(reader["Modified"])
-                    };
-                    admins.Add(admin);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error Generate In GetAdmin data", ex);
-            }
-            finally
-            {
-                reader.Close();
-            }
-        }
+        public static List<Admin> admins = new List<Admin>() { };      
     }
 }

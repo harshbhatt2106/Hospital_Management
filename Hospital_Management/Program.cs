@@ -41,7 +41,7 @@ namespace Hospital_Management
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Try}/{action=Index}/{id?}"
+                pattern: "{controller=Admin}/{action=Login}/{id?}"
             );
 
             app.Run();

@@ -9,7 +9,6 @@ namespace Hospital_Management.Controllers
 
     public class DepartmentController : Controller
     {
-        public static List<Department> departmentList = Helper_Method.GetDepartmentList();
 
         private readonly IDepartmentService _service;
         public DepartmentController(IDepartmentService departmentService)
@@ -19,9 +18,8 @@ namespace Hospital_Management.Controllers
         [Route("/Department/DepartmentList")]
         public IActionResult DepartmentList()
         {
-            departmentList.Clear();
-            departmentList = Helper_Method.GetDepartmentList();
-            return View(departmentList);
+            var data = _service.departments();
+            return View(data);
         }
 
         public IActionResult AddDepartment()
@@ -48,30 +46,32 @@ namespace Hospital_Management.Controllers
                 TempData["Message"] = "SuccessFaully Added...";
                 TempData["Status"] = false;
             }
-                 
             return View("AddDepartment");
         }
 
         [Route("/Department/Edit")]
         public IActionResult EditDepartment(int id)
         {
-            var data = departmentList.Find(x => x.DepartmentID == id);
+            var data = _service.departments().Find(x => x.DepartmentID == id);
             return View(data);
         }
+
+        [HttpGet]
+        [Route("/Department/DepartmentExits/{departmentName}")]
+        public IActionResult DepartmentExits(string departmentName)
+        {
+            bool data = _service.CheckDepartment(departmentName);
+            return Json(data);
+        }
+
 
         [HttpPost]
         [Route("/Department/Update")]
         public IActionResult EditDepartment(Department dept)
-        {
-            string procedure = "SP_Update_Departement";
-            SqlParameter[] sqlParameters = new SqlParameter[]
-            {
-                new SqlParameter ("@Description",dept.Description),
-                new SqlParameter("@DepartmentName",dept.DepartmentName),
-                new SqlParameter("@DepartmentID",dept.DepartmentID),
-            };
-            bool IsUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
-            if (IsUpdated)
+        {      
+            bool isUpdate = _service.UpdateDepartment(dept);
+
+            if (isUpdate)
             {
                 TempData["Department_Update_Message"] = "Department Data Updated SuccessFully.....";
             }
@@ -87,12 +87,7 @@ namespace Hospital_Management.Controllers
         [Route("/Department/Delete/{id?}")]
         public IActionResult DeleteDepartment(int id)
         {
-            SqlParameter[] sqlParameters = new SqlParameter[]
-            {
-                new SqlParameter("@DID",id)
-            };
-            string Procedure = "SP_Delete_Department";
-            DBHelper.ExecuteNonQuery(Procedure, sqlParameters);
+            _service.DeleteDepartment(id);
             return RedirectToAction("DepartmentList", "Department");
         }
 
