@@ -1,8 +1,6 @@
-﻿using Hospital_Management.CommonMethod;
-using Hospital_Management.Interfaces;
+﻿using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 
 namespace Hospital_Management.Controllers
 {
@@ -35,7 +33,7 @@ namespace Hospital_Management.Controllers
             department.UserID = _userid ?? 0;
 
             TempData["Message"] = null;
-            if (_service.CheckDepartment(department.DepartmentName))
+            if (_service.CheckDepartment(department.DepartmentName ?? " "))
             {
                 TempData["Message"] = "Department Already Exits....";
                 TempData["Status"] = true;
@@ -56,11 +54,12 @@ namespace Hospital_Management.Controllers
             return View(data);
         }
 
+
         [HttpGet]
         [Route("/Department/DepartmentExits/{departmentName}")]
-        public IActionResult DepartmentExits(string departmentName)
+        public IActionResult DepartmentExits(string departmentname)
         {
-            bool data = _service.CheckDepartment(departmentName);
+            bool data = _service.departments().Any(x => x.DepartmentName == departmentname);
             return Json(data);
         }
 
@@ -68,7 +67,7 @@ namespace Hospital_Management.Controllers
         [HttpPost]
         [Route("/Department/Update")]
         public IActionResult EditDepartment(Department dept)
-        {      
+        {
             bool isUpdate = _service.UpdateDepartment(dept);
 
             if (isUpdate)
@@ -84,11 +83,14 @@ namespace Hospital_Management.Controllers
 
 
         [HttpPost]
-        [Route("/Department/Delete/{id?}")]
-        public IActionResult DeleteDepartment(int id)
+        [Route("/Department/UpdateDepartmentStatus/{id?}")]
+        public IActionResult UpdateDepartmentStatus(int id)
         {
-            _service.DeleteDepartment(id);
-            return RedirectToAction("DepartmentList", "Department");
+            bool result = _service.setDepartmentStatus(id);
+            return Json(new
+            {
+                success = result
+            });
         }
 
     }

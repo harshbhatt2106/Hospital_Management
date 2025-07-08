@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hospital_Management.Controllers
 {
     public class ErrorController : Controller
-    {      
+    {
         [Route("Error/General")]
         [AllowAnonymous]
         public IActionResult General()
@@ -24,12 +24,19 @@ namespace Hospital_Management.Controllers
                 return View("Error");
             }
         }
-        
+
         [Route("Error/InvalidUrl")]
         public IActionResult InvalidUrl()
         {
             var data = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            ViewBag.URl_Name= data.OriginalPath;
+            if (data!=null)
+            {
+                ViewBag.URl_Name = data.OriginalPath;
+            }
+            else
+            {
+                ViewBag.URL_Name = "Unknown or missing URL";
+            }
             return View();
         }
     }

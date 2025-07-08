@@ -47,7 +47,7 @@
 {
     <script>
 
-       const deptName = document.getElementById('deptName');
+        const deptName = document.getElementById('deptName');
         const deptError = document.getElementById('deptError');
         const btn = document.getElementById("sub");
         const orignol = deptName.value;
@@ -55,10 +55,10 @@
         deptName.addEventListener('blur',function()
         {
            let current = deptName.value;
-           
+
            if(deptName.value.trim()==='')
            {
-                deptError.textContent = "please Fill blank"
+                deptError.textContent = "please Fill blank";
                 return;
            }
 
@@ -68,13 +68,13 @@
                 return;
             }
 
-            const val = deptName.value.trim();
+               const val = deptName.value.trim();
                fetch('/Department/DepartmentExits/' + encodeURIComponent(val),{})
                 .then(res=>res.json())
                 .then(data=>{
                     if(data==true)
                     {
-                        deptError.textContent = "Department Alreadt Exist";
+                        deptError.textContent = "Department Already Exist";
                         btn.disabled = true;
                     }
                     else
@@ -84,6 +84,7 @@
                     }
                 })
                 .catch(() => {
+                    btn.disabled = true;
                     deptError.textContent = "Server error!";
                 });
 

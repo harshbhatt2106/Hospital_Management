@@ -8,8 +8,9 @@ namespace Hospital_Management.Interfaces
         bool CheckDepartment(string department);
         bool AddDepartment(Department department);
 
+        bool setDepartmentStatus(int departmentID);
+
         bool DeleteDepartment(int departmentId);
-        void ReloadDepartments();
         bool UpdateDepartment(Department department);
 
     }

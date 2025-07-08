@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary text-center"><i class="fas fa-user-md me-2"></i>Doctor Dashboard</h2>
+
+    <div class="row g-4">
+        <!-- Appointments Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-start border-primary border-4 shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary"><i class="fas fa-calendar-check me-2"></i>Appointments</h5>
+                    <p class="card-text">You have 12 appointments today.</p>
+                    <a href="/Appointment/List" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-start border-success border-4 shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-success"><i class="fas fa-user-injured me-2"></i>Patients</h5>
+                    <p class="card-text">Total 80 active patients under your care.</p>
+                    <a href="/Patient/List" class="btn btn-outline-success btn-sm">Manage</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-start border-warning border-4 shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-warning"><i class="fas fa-envelope me-2"></i>Messages</h5>
+                    <p class="card-text">5 unread messages from patients.</p>
+                    <a href="/Message/Inbox" class="btn btn-outline-warning btn-sm">Check Inbox</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-start border-info border-4 shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-info"><i class="fas fa-user-circle me-2"></i>My Profile</h5>
+                    <p class="card-text">Update your profile and availability.</p>
+                    <a href="/Doctor/Profile" class="btn btn-outline-info btn-sm">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

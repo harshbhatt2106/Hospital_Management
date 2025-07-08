@@ -6,7 +6,7 @@ namespace Hospital_Management.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View("DoctorDashboard");
         }
     }
 }

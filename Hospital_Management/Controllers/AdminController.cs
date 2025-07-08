@@ -10,6 +10,12 @@ namespace Hospital_Management.Controllers
         {
             return View();
         }
+      
+        [Route("/Admin/AdminProfile")]
+        public IActionResult Profile()
+        {
+            return View("AdminProfile");
+        }
 
         [HttpGet]
         public IActionResult Login()
@@ -26,7 +32,7 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string UserName, string Password)
+        public IActionResult Login(string UserName,string Password)
         {           
             try
             {

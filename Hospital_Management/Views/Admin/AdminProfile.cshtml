@@ -1,0 +1,572 @@
+﻿@* AdminProfile.cshtml *@
+<div class="admin-profile-container">
+    <div class="profile-grid">
+        <!-- Personal Information Section -->
+        <div class="profile-card profile-personal">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <h3>Personal Information</h3>
+            </div>
+            <div class="card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Username</span>
+                        <span class="info-value">admin</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">admin123@gmail.com</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Mobile</span>
+                        <span class="info-value">9586977634</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Last Modified</span>
+                        <span class="info-value">2025-06-27 16:35:17</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Management Section -->
+        <div class="profile-card profile-security">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Security Center</h3>
+            </div>
+            <div class="card-body">
+                <div class="security-grid">
+                    <div class="password-reset">
+                        <h4>Reset Password</h4>
+                        <form class="password-form">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <div class="password-input">
+                                    <input type="password" placeholder="Enter new password">
+                                    <i class="fas fa-eye toggle-password"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <div class="password-input">
+                                    <input type="password" placeholder="Confirm new password">
+                                    <i class="fas fa-eye toggle-password"></i>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-update">
+                                <i class="fas fa-sync-alt"></i> Update Password
+                            </button>
+                        </form>
+                    </div>
+                    <div class="password-recovery">
+                        <h4>Account Recovery</h4>
+                        <p>Secure your account with multi-factor authentication</p>
+                        <button class="btn-recovery">
+                            <i class="fas fa-key"></i> Enable MFA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div class="profile-card profile-stats">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-chart-network"></i>
+                </div>
+                <h3>System Overview</h3>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card doctor-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">142</span>
+                            <span class="stat-label">Total Doctors</span>
+                        </div>
+                    </div>
+                    <div class="stat-card dept-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">56</span>
+                            <span class="stat-label">Departments</span>
+                        </div>
+                    </div>
+                    <div class="stat-card admin-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Administrators</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Status Table -->
+        <div class="profile-card profile-admin-table">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>Administrator Status</h3>
+            </div>
+            <div class="card-body">
+                <div class="admin-table">
+                    <div class="table-responsive">
+                        <table class="admin-status-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Last Activity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="user-avatar">
+                                            <span>H</span>
+                                        </div>
+                                        <span>Harsh</span>
+                                    </td>
+                                    <td>harshbhatt932@gmail.com</td>
+                                    <td>
+                                        <span class="status-badge active">Active</span>
+                                    </td>
+                                    <td>2025-06-26 21:06:03</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-avatar">
+                                            <span>B</span>
+                                        </div>
+                                        <span>bhatt</span>
+                                    </td>
+                                    <td>bhatt@gmail.com</td>
+                                    <td>
+                                        <span class="status-badge inactive">Inactive</span>
+                                    </td>
+                                    <td>2025-06-27 16:36:44</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Base Styles */
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+        --warning-color: #f8961e;
+        --info-color: #4895ef;
+        --dark-color: #212529;
+        --light-color: #f8f9fa;
+        --text-color: #2b2d42;
+        --text-muted: #6c757d;
+        --border-color: #e9ecef;
+        --card-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* Layout Styles */
+    .admin-profile-container {
+        padding: 2rem;
+        background-color: #f5f7fa;
+        min-height: 100vh;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Card Styles */
+    .profile-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-header {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+    .header-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .header-icon i {
+            font-size: 1.2rem;
+        }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Personal Information Styles */
+    .profile-personal {
+        grid-column: span 1;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+    .info-label {
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    /* Security Center Styles */
+    .profile-security {
+        grid-column: span 1;
+    }
+
+    .security-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .password-form {
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+    .password-input {
+        position: relative;
+    }
+
+        .password-input input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+            .password-input input:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+                outline: none;
+            }
+
+    .toggle-password {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        cursor: pointer;
+    }
+
+    .btn-update {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: var(--transition);
+    }
+
+        .btn-update:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+    .password-recovery {
+        text-align: center;
+        padding: 1.5rem;
+        background: rgba(72, 149, 239, 0.1);
+        border-radius: 8px;
+    }
+
+        .password-recovery p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+    .btn-recovery {
+        background: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: var(--transition);
+    }
+
+        .btn-recovery:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+    /* Statistics Dashboard Styles */
+    .profile-stats {
+        grid-column: span 1;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: var(--transition);
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .doctor-stat {
+        background: rgba(76, 201, 240, 0.1);
+        border-left: 4px solid var(--success-color);
+    }
+
+    .dept-stat {
+        background: rgba(248, 150, 30, 0.1);
+        border-left: 4px solid var(--warning-color);
+    }
+
+    .admin-stat {
+        background: rgba(247, 37, 133, 0.1);
+        border-left: 4px solid var(--danger-color);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .doctor-stat .stat-icon {
+        color: var(--success-color);
+    }
+
+    .dept-stat .stat-icon {
+        color: var(--warning-color);
+    }
+
+    .admin-stat .stat-icon {
+        color: var(--danger-color);
+    }
+
+    .stat-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .doctor-stat .stat-number {
+        color: var(--success-color);
+    }
+
+    .dept-stat .stat-number {
+        color: var(--warning-color);
+    }
+
+    .admin-stat .stat-number {
+        color: var(--danger-color);
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    /* Admin Table Styles */
+    .profile-admin-table {
+        grid-column: span 2;
+    }
+
+    .admin-status-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .admin-status-table thead th {
+            background: var(--light-color);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-status-table tbody tr {
+            transition: var(--transition);
+        }
+
+            .admin-status-table tbody tr:hover {
+                background: rgba(67, 97, 238, 0.05);
+            }
+
+        .admin-status-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+        .status-badge.active {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .status-badge.inactive {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+
+    /* Responsive Adjustments */
+    
+    
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<script>
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    });
+</script>

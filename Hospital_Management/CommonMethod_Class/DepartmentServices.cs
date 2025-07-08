@@ -23,7 +23,8 @@ namespace Hospital_Management.CommonMethod_Class
                         DepartmentID = Convert.ToInt32(reader["DepartmentID"]),
                         DepartmentName = reader["DepartmentName"].ToString(),
                         Description = reader["Description"].ToString(),
-                        Modified = Convert.ToDateTime(reader["TimeOnly"])
+                        Modified = Convert.ToDateTime(reader["TimeOnly"]),
+                        IsActive = (bool)reader["IsActive"]
                     };
                     _departments.Add(d);
                 }
@@ -50,11 +51,11 @@ namespace Hospital_Management.CommonMethod_Class
         {
             SqlDataReader? reader = null;
             try
-            {
+            {                
                 string procedure = "SP_Department_IsExits";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@DName",DepartmentName.ToUpper())
+                    new SqlParameter("@DName",DepartmentName.Trim().ToUpper())
                 };
                 reader = DBHelper.ExecuteReder(procedure, parameters);
                 if (reader.HasRows)
@@ -80,12 +81,11 @@ namespace Hospital_Management.CommonMethod_Class
             string Procedure = "SP_Delete_Department";
             bool Isdeleted = DBHelper.ExecuteNonQuery(Procedure, sqlParameters);
             ReloadDepartments();
-
             return Isdeleted;
         }
 
 
-        public void ReloadDepartments()
+        private void ReloadDepartments()
         {
             _departments =  departments();
         }
@@ -100,6 +100,18 @@ namespace Hospital_Management.CommonMethod_Class
                 new SqlParameter("@DepartmentID",department.DepartmentID),
             };
             bool isUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
+            return isUpdated;
+        }
+
+        public bool setDepartmentStatus(int departmentID)
+        {
+            string procedure = "SP_ChangeActiveStatus_Department";
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                new SqlParameter ("@DID",departmentID)
+            };
+            bool isUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
+            ReloadDepartments();
             return isUpdated;
         }
     }

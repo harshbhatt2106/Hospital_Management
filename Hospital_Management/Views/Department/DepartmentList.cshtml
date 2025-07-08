@@ -4,7 +4,6 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="~/css/departmentlist.css" rel="stylesheet" />
 
-
 <div class="container-fluid py-4">
 
     <a href="/Department/AddDepartment" class="btn btn-primary btn-sm px-2 py-1 rounded-pill" style="font-size: 0.8rem;">
@@ -46,6 +45,9 @@
                                     <i class="fas fa-calendar-alt me-1"></i> Last Updated
                                 </th>
                                 <th scope="col" class="ps-4 py-3">Actions</th>
+                                <th scope="col" class="py-3">
+                                    <i class="fas fa-check-circle me-1"></i> Status
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,7 +67,7 @@
                                     </td>
                                     <td class="ps-4 py-3">
                                         <div class="d-flex gap-2">
-                                            <!-- 🖊 Edit Button -->
+
                                             <a asp-controller="Department"
                                                asp-action="EditDepartment"
                                                asp-route-id="@dept.DepartmentID"
@@ -73,14 +75,19 @@
                                                 <i class="material-icons" style="font-size:20px; color:blue;">edit</i>
                                             </a>
 
-                                            <!-- ✅ DELETE BUTTON (No form tag) -->
-                                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
+                                            <button type="button"
+                                                    class="btn btn-sm @(dept.IsActive ? "btn-outline-warning" : "btn-outline-success")"
                                                     data-id="@dept.DepartmentID"
-                                                    data-name="@dept.DepartmentName">
-                                                <i class="material-icons" style="font-size:20px; color:red;">delete</i>
+                                                    data-status="@dept.IsActive"
+                                                    onclick="updateStatus(this)">
+                                                @(dept.IsActive ? "Disable" : "Activate")
                                             </button>
-
                                         </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <span id="status-@dept.DepartmentID" class="badge @(dept.IsActive ? "bg-success" : "bg-danger")">
+                                            @(dept.IsActive ? "Active" : "Inactive")
+                                        </span>
                                     </td>
                                 </tr>
                             }
@@ -106,65 +113,53 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="nn" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete <strong><span id="deptNameToDelete"></span></strong> department?</p>
-                <p class="text-danger"><small>This action cannot be undone.</small></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="post">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts {
     <script>
+        function updateStatus(button) {
+            const id = button.getAttribute("data-id");
+            const isActive = button.getAttribute("data-status") === "True"; 
 
+            const confirmMsg = isActive
+                ? "Are you sure you want to deactivate this department?"
+                : "Are you sure you want to activate this department?";
 
-        document.querySelectorAll('.delete-btn').forEach(button =>
-        {
-            button.addEventListener('click', function ()
+            if (!confirm(confirmMsg))
             {
-                const deptId = this.getAttribute('data-id');
+                return;
+            }
 
-                fetch('/Department/Delete/' + deptId,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response =>
-                {
+            fetch(`/Department/UpdateDepartmentStatus/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return alert("Update failed");
 
-                    if (response.ok)
-                    {
-                        const row = this.closest('tr');
-                        if (row) row.remove();
-                    }
-                    else
-                    {
-                        alert('Delete failed.');
-                    }
-                })
-                .catch(error =>
+                const badge = document.getElementById("status-" + id);
+
+                if (isActive) 
                 {
-                    alert('Error: ' + error);
-                });
-            });
-        });
+                    badge.innerText = "Inactive";
+                    badge.className = "badge bg-danger";
+
+                    button.innerText = "Activate";
+                    button.className = "btn btn-sm btn-outline-success";
+                    button.setAttribute("data-status", "False");
+                }
+                else 
+                {
+                    badge.innerText = "Active";
+                    badge.className = "badge bg-success";
+
+                    button.innerText = "Disable";
+                    button.className = "btn btn-sm btn-outline-warning";
+                    button.setAttribute("data-status", "True");
+                }
+            })
+            .catch(err => alert("Error: " + err));
+        }
     </script>
+
+
 }

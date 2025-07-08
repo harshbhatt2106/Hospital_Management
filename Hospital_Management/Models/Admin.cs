@@ -1,12 +1,13 @@
-﻿using Hospital_Management.CommonMethod;
-using System.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital_Management.Models
 {
     public class Admin
     {
         public int UserID { get; set; }
+
         public string? UserName { get; set; }
+        
         public string? Password { get; set; }
         public string? Email { get; set; }
         public string? MobileNo { get; set; }

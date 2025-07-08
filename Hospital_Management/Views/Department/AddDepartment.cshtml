@@ -19,7 +19,7 @@
                             <div class="mb-3">
                                 <label asp-for="DepartmentName" class="form-label">Department Name</label>
                                 <input asp-for="DepartmentName" id="DN" class="form-control" placeholder="Enter department name" required />
-                                <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                                <span asp-validation-for="DepartmentName" id="deptError" class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
@@ -28,7 +28,7 @@
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
 
-                            <button type="submit"  onclick="return CreatePop();" class="btn text-white w-100" style="background-color: #006494;">Submit</button>
+                            <button type="submit" id="sbtn" onclick="return CreatePop();" class="btn text-white w-100" style="background-color: #006494;">Submit</button>
                             @{
                                 if (TempData["Message"] != null)
                                 {
@@ -47,12 +47,47 @@
     <script>
         function CreatePop()
         {
-            return confirm("Do you confirm?");
+            return confirm("Do you Really Want To Add Department?");
         }
         const inputs = document.querySelectorAll('textarea,input');
              inputs.forEach(i => {
             i.value = '';
         });
+
+        const DepartmentName = document.getElementById('DN');
+        const deptError = document.getElementById('deptError');
+        const btn = document.getElementById('sbtn');
+        const orignol = DepartmentName.value;
+
+
+        DepartmentName.addEventListener('blur',function()
+        {
+
+            if(DepartmentName.value.trim()==='')
+            {
+                deptError.textContent = "please Fill blank";
+                btn.disabled = true;
+                return;
+            }
+
+            const val =  DepartmentName.value.trim();
+
+            fetch('/Department/DepartmentExits/' + encodeURIComponent(val),{})
+            .then(res=>res.json())
+            .then(data=>
+            {
+                if(data==true)
+                {
+                    deptError.textContent="Department Already Exits";
+                    btn.disabled = true;
+                }
+                else
+                {
+                    deptError.textContent="";
+                    btn.disabled = false;
+                }
+            })
+        })
 
     </script>
 
