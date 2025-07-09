@@ -4,7 +4,7 @@
     <h1>
         @foreach (var dept in Model)
         {
-                <input type="checkbox" name="seletedlist" value="@dept.DepartmentID" />
+                <input type="checkbox" name="seletedlist" value="@dept.DepartmentId" />
                 <label>@dept.DepartmentName</label>   
         }
         <button type="submit">Click</button>

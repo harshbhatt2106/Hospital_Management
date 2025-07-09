@@ -30,7 +30,7 @@ namespace Hospital_Management.Controllers
         public IActionResult AddDepartment(Department department)
         {
             int? _userid = HttpContext.Session.GetInt32("UserID");
-            department.UserID = _userid ?? 0;
+            department.UserId = _userid ?? 0;
 
             TempData["Message"] = null;
             if (_service.CheckDepartment(department.DepartmentName ?? " "))
@@ -50,7 +50,7 @@ namespace Hospital_Management.Controllers
         [Route("/Department/Edit")]
         public IActionResult EditDepartment(int id)
         {
-            var data = _service.departments().Find(x => x.DepartmentID == id);
+            var data = _service.departments().Find(x => x.DepartmentId == id);
             return View(data);
         }
 

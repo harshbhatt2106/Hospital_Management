@@ -1,0 +1,69 @@
+﻿@model Hospital_Management.Models.Doctor
+
+@{
+    ViewData["Title"] = "Add Doctor";
+}
+
+<div class="container mt-5">
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h3 class="mb-0">Add New Doctor</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddDoctor" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter doctor name" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-semibold"></label>
+                        <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Qualification" class="form-label fw-semibold"></label>
+                        <input asp-for="Qualification" class="form-control" placeholder="Enter qualification" />
+                        <span asp-validation-for="Qualification" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Specialization" class="form-label fw-semibold"></label>
+                    <input asp-for="Specialization" class="form-control" placeholder="Enter specialization" />
+                    <span asp-validation-for="Specialization" class="text-danger small"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success px-4 py-2 rounded-pill">💾 Save Doctor</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2 px-4 py-2 rounded-pill">🔙 Cancel</a>
+                </div>
+                <p>
+                    @{
+                        if (TempData["DoctorAddMessgae"]!=null)
+                        {
+                            <h6>TempData["DoctorAddMessgae"]</h6>
+                        }
+                    }
+                </>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

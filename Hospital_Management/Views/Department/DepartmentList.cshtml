@@ -70,14 +70,14 @@
 
                                             <a asp-controller="Department"
                                                asp-action="EditDepartment"
-                                               asp-route-id="@dept.DepartmentID"
+                                               asp-route-id="@dept.DepartmentId"
                                                class="btn btn-sm btn-outline-primary edit-btn">
                                                 <i class="material-icons" style="font-size:20px; color:blue;">edit</i>
                                             </a>
 
                                             <button type="button"
                                                     class="btn btn-sm @(dept.IsActive ? "btn-outline-warning" : "btn-outline-success")"
-                                                    data-id="@dept.DepartmentID"
+                                                    data-id="@dept.DepartmentId"
                                                     data-status="@dept.IsActive"
                                                     onclick="updateStatus(this)">
                                                 @(dept.IsActive ? "Disable" : "Activate")
@@ -85,7 +85,7 @@
                                         </div>
                                     </td>
                                     <td class="py-3">
-                                        <span id="status-@dept.DepartmentID" class="badge @(dept.IsActive ? "bg-success" : "bg-danger")">
+                                        <span id="status-@dept.DepartmentId" class="badge @(dept.IsActive ? "bg-success" : "bg-danger")">
                                             @(dept.IsActive ? "Active" : "Inactive")
                                         </span>
                                     </td>
@@ -134,7 +134,10 @@
             })
             .then(res => res.json())
             .then(data => {
-                if (!data.success) return alert("Update failed");
+                if (!data.success) 
+                {
+                    return alert("Update failed");
+                }
 
                 const badge = document.getElementById("status-" + id);
 

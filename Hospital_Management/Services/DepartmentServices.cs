@@ -3,7 +3,7 @@ using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using System.Data.SqlClient;
 
-namespace Hospital_Management.CommonMethod_Class
+namespace Hospital_Management.Services
 {
 
     public class DepartmentServices : IDepartmentService
@@ -20,7 +20,7 @@ namespace Hospital_Management.CommonMethod_Class
                 {
                     Department d = new Department()
                     {
-                        DepartmentID = Convert.ToInt32(reader["DepartmentID"]),
+                        DepartmentId= Convert.ToInt32(reader["DepartmentID"]),
                         DepartmentName = reader["DepartmentName"].ToString(),
                         Description = reader["Description"].ToString(),
                         Modified = Convert.ToDateTime(reader["TimeOnly"]),
@@ -40,7 +40,7 @@ namespace Hospital_Management.CommonMethod_Class
                 new SqlParameter("@DepartmentName", department.DepartmentName),
                 new SqlParameter("@Description", department.Description),
                 new SqlParameter("@Modified", DateTime.Now),
-                new SqlParameter("@UserID", department.UserID)
+                new SqlParameter("@UserID", department.UserId)
             };
             bool isAdded = DBHelper.ExecuteNonQuery(procedure, parameters);
             //ReloadDepartments();
@@ -51,7 +51,7 @@ namespace Hospital_Management.CommonMethod_Class
         {
             SqlDataReader? reader = null;
             try
-            {                
+            {
                 string procedure = "SP_Department_IsExits";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
@@ -87,7 +87,7 @@ namespace Hospital_Management.CommonMethod_Class
 
         private void ReloadDepartments()
         {
-            _departments =  departments();
+            _departments = departments();
         }
 
         public bool UpdateDepartment(Department department)
@@ -97,7 +97,7 @@ namespace Hospital_Management.CommonMethod_Class
             {
                 new SqlParameter ("@Description",department.Description),
                 new SqlParameter("@DepartmentName",department.DepartmentName),
-                new SqlParameter("@DepartmentID",department.DepartmentID),
+                new SqlParameter("@DepartmentID",department.DepartmentId),
             };
             bool isUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
             return isUpdated;

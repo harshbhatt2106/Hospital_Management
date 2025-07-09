@@ -1,5 +1,7 @@
-using Hospital_Management.CommonMethod_Class;
+using Hospital_Management.Data;
 using Hospital_Management.Interfaces;
+using Hospital_Management.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management
 {
@@ -18,14 +20,19 @@ namespace Hospital_Management
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddSingleton<IDepartmentService,DepartmentServices>();
+            builder.Services.AddDbContext<HospitalDbContext>(options =>
+           options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddSingleton<IDepartmentService, DepartmentServices>();
+            builder.Services.AddScoped<IDoctorServices,DoctorService>();
+
             var app = builder.Build();
 
             app.UseStatusCodePagesWithReExecute("/Error/InvalidURL");
             app.UseExceptionHandler("/Error/General");
 
             if (!app.Environment.IsDevelopment())
-            {               
+            {
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
