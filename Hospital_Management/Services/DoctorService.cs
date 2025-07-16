@@ -11,9 +11,24 @@ namespace Hospital_Management.Services
         {
             this._hospitalDbContext = _hospitalDbContext;
         }
-        public bool AddDoctor(Doctor doctor)
+        public bool AddDoctorWithDepartment(Doctor doctor,List<int> SelectedDepartmentId,int UserId)
         {
             _hospitalDbContext.Doctors.Add(doctor);
+            _hospitalDbContext.SaveChanges();
+
+            // selected DepartmentID by Admin for Doctor
+            foreach (var DepartmentID in SelectedDepartmentId)
+            {
+                var DoctorDepartment = new DoctorDepartment()
+                {
+                    DepartmentId = DepartmentID,
+                    DoctorId = doctor.DoctorId,
+                    Created = DateTime.Now,
+                    Modified = DateTime.Now,
+                    UserId = UserId
+                };
+                _hospitalDbContext.DoctorDepartments.Add(DoctorDepartment);
+            }                       
             return _hospitalDbContext.SaveChanges() > 0;
         }
 

@@ -1,12 +1,1 @@
-﻿@model List<Department>
-
-<form asp-action="SelectdList" method="post">
-    <h1>
-        @foreach (var dept in Model)
-        {
-                <input type="checkbox" name="seletedlist" value="@dept.DepartmentId" />
-                <label>@dept.DepartmentName</label>   
-        }
-        <button type="submit">Click</button>
-    </h1>
-</form>
+﻿

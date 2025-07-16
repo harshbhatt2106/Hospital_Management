@@ -1,0 +1,23 @@
+﻿@model List<Hospital_Management.Models.Doctor>
+
+<h2>Doctor List</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Doctor Name</th>
+            <th>Departments</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model)
+        {
+            <tr>
+                <td>@doctor.Name</td>
+                <td>
+                    @string.Join(',',doctor.DoctorDepartments.Select(dd=>dd.Department.DepartmentName))
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

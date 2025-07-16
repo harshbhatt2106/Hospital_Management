@@ -9,6 +9,9 @@ namespace Hospital_Management.Interfaces
         bool AddDepartment(Department department);
 
         bool setDepartmentStatus(int departmentID);
+        
+      
+        
 
         bool DeleteDepartment(int departmentId);
         bool UpdateDepartment(Department department);
