@@ -52,6 +52,22 @@ namespace Hospital_Management.Services
             throw new NotImplementedException();
         }
 
+        public string isDoctorExits(string doctorName,string phone)
+        {
+            bool isDoctoravailabe = _hospitalDbContext.Doctors.Any(x => x.Name.ToLower() == doctorName.ToLower());
+
+            bool isohone = _hospitalDbContext.Doctors.Any(x => x.Phone.ToLower() == phone.ToLower());
+            if (isDoctoravailabe)
+            {
+                return "DNAME";
+            }
+            if (isohone)
+            {
+                return "DPHONE";
+            }
+            return "Non";
+        }
+
         public bool updateDoctorWithDepartment(Doctor doctor, List<int> selectedDepartmentID)
         {
 
@@ -60,7 +76,7 @@ namespace Hospital_Management.Services
                 .ToList();
 
             _hospitalDbContext.DoctorDepartments.RemoveRange(oldDepartments);
-           
+
             _hospitalDbContext.Doctors.Update(doctor);
 
             foreach (var deptId in selectedDepartmentID)

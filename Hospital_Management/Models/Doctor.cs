@@ -13,7 +13,7 @@ namespace Hospital_Management.Models
         }
 
         public int DoctorId { get; set; }
-        [Required]
+
         public string Name { get; set; } = null!;
 
         [Required]

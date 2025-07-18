@@ -2,6 +2,7 @@
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Controllers
@@ -140,6 +141,14 @@ namespace Hospital_Management.Controllers
         {
             _doctorService.DeleteDoctor(doctorID);
             return RedirectToAction("ShowDoctors");
+        }
+
+        [HttpGet]
+        [Route("/Doctor/isDoctorExitsOrNot/{doctorName}/{Phone}")]
+        public IActionResult IsDoctorNameExists(string doctorName,string Phone)
+        {
+            string isDoctore = _doctorService.isDoctorExits(doctorName,Phone);
+            return Ok(new {messgae = isDoctore});
         }
     }
 }
