@@ -1,6 +1,7 @@
 ﻿using Hospital_Management.Data;
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Services
 {
@@ -11,7 +12,7 @@ namespace Hospital_Management.Services
         {
             this._hospitalDbContext = _hospitalDbContext;
         }
-        public bool AddDoctorWithDepartment(Doctor doctor,List<int> SelectedDepartmentId,int UserId)
+        public bool AddDoctorWithDepartment(Doctor doctor, List<int> SelectedDepartmentId, int UserId)
         {
             _hospitalDbContext.Doctors.Add(doctor);
             _hospitalDbContext.SaveChanges();
@@ -28,13 +29,17 @@ namespace Hospital_Management.Services
                     UserId = UserId
                 };
                 _hospitalDbContext.DoctorDepartments.Add(DoctorDepartment);
-            }                       
+            }
             return _hospitalDbContext.SaveChanges() > 0;
         }
 
-        public bool DeleteDoctor(int doctorId)
+        public void DeleteDoctor(int doctorId)
         {
-            throw new NotImplementedException();
+            var doctordID = _hospitalDbContext.DoctorDepartments
+                            .ToList()
+                            .Where(x => x.DoctorId == doctorId);
+            _hospitalDbContext.RemoveRange(doctordID);
+            _hospitalDbContext.SaveChanges();
         }
 
         public List<Doctor> GetAllDoctors()
@@ -47,9 +52,33 @@ namespace Hospital_Management.Services
             throw new NotImplementedException();
         }
 
-        public bool UpdateDoctor(Doctor doctor)
+        public bool updateDoctorWithDepartment(Doctor doctor, List<int> selectedDepartmentID)
         {
-            throw new NotImplementedException();
+
+            var oldDepartments = _hospitalDbContext.DoctorDepartments
+                .Where(x => x.DoctorId == doctor.DoctorId)
+                .ToList();
+
+            _hospitalDbContext.DoctorDepartments.RemoveRange(oldDepartments);
+           
+            _hospitalDbContext.Doctors.Update(doctor);
+
+            foreach (var deptId in selectedDepartmentID)
+            {
+                var doctorDepartment = new DoctorDepartment
+                {
+                    UserId = doctor.UserId,
+                    DoctorId = doctor.DoctorId,
+                    DepartmentId = deptId
+                };
+
+                _hospitalDbContext.DoctorDepartments.Add(doctorDepartment);
+            }
+
+            _hospitalDbContext.SaveChanges();
+
+            return true;
         }
     }
 }
+

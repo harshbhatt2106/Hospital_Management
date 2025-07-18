@@ -1,1 +1,85 @@
-﻿
+﻿@model Hospital_Management.Models.AddDoctorViewModel
+
+@{
+    ViewData["Title"] = "Update Doctor";
+}
+
+<div class="container mt-5">
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h3 class="mb-0">Update Doctor</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Update" method="post">
+                <input type="hidden" asp-for="DoctorId" />
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter doctor name" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-semibold"></label>
+                        <input asp-for="Phone" type="number" class="form-control" placeholder="Enter phone number" />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Qualification" class="form-label fw-semibold"></label>
+                        <input asp-for="Qualification" class="form-control" placeholder="Enter qualification" />
+                        <span asp-validation-for="Qualification" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Departments</label>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            Select Departments
+                        </button>
+                        <ul class="dropdown-menu p-3" style="max-height: 200px; overflow-y: auto;">
+                            @foreach (var dept in Model.Departments)
+                            {
+                                <li>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="SelectedDepartmentId"
+                                               value="@dept.DepartmentId"
+                                        @(Model.SelectedDepartmentId != null && Model.SelectedDepartmentId.Contains(dept.DepartmentId) ? "checked" : "") />
+                                        <label class="form-check-label">@dept.DepartmentName</label>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Specialization" class="form-label fw-semibold"></label>
+                    <input asp-for="Specialization" class="form-control" placeholder="Enter specialization" />
+                    <span asp-validation-for="Specialization" class="text-danger small"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success px-4 py-2 rounded-pill">✅ Update Doctor</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2 px-4 py-2 rounded-pill">🔙 Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -34,7 +34,7 @@ namespace Hospital_Management.Controllers
         [Route("/Doctor/AddDoctor/")]
         public IActionResult AddDoctor(AddDoctorViewModel addDoctorViewModel)
         {
-            
+
             int? _userid = HttpContext.Session.GetInt32("UserID");
 
             var Doctors = new Doctor()
@@ -69,9 +69,77 @@ namespace Hospital_Management.Controllers
                 .Include(d => d.DoctorDepartments)
                 .ThenInclude(d => d.Department)
                 .ToList();
-            return View(doctor);
+
+            return View("ShowDoctorWithDepartment", doctor);
         }
 
+        public IActionResult Update(int doctorID)
+        {
+            AddDoctorViewModel addDoctorViewModel = new AddDoctorViewModel();
 
+            //Load All SeletedDepartment From DD table
+            addDoctorViewModel.SelectedDepartmentId = _hospitalDbContext.DoctorDepartments
+                        .Where(x => x.DoctorId == doctorID)
+                        .Select(x => x.DepartmentId)
+                        .ToList();
+
+            // get all department
+            addDoctorViewModel.Departments = _hospitalDbContext.Departments.ToList();
+
+            var doctor = _hospitalDbContext.Doctors.FirstOrDefault(x => x.DoctorId == doctorID);
+
+            if (doctor != null)
+            {
+                addDoctorViewModel.DoctorId = doctorID;
+                addDoctorViewModel.Qualification = doctor.Qualification;
+                addDoctorViewModel.Specialization = doctor.Specialization;
+                addDoctorViewModel.Name = doctor.Name;
+                addDoctorViewModel.Email = doctor.Email;
+                addDoctorViewModel.Phone = doctor.Phone;
+            }
+
+            return View("UpdateDoctor", addDoctorViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Update(AddDoctorViewModel addDoctorViewModel)
+        {
+            int? _userid = HttpContext.Session.GetInt32("UserID");
+
+            var Doctors = new Doctor()
+            {
+                Name = addDoctorViewModel.Name,
+                Phone = addDoctorViewModel.Phone,
+                Email = addDoctorViewModel.Email,
+                Qualification = addDoctorViewModel.Qualification,
+                Specialization = addDoctorViewModel.Specialization,
+                Created = DateTime.Now,
+                Modified = DateTime.Now,
+                UserId = _userid ?? 1,
+                DoctorId = addDoctorViewModel.DoctorId,
+                IsActive = true,
+            };
+
+            bool isAdded = _doctorService.updateDoctorWithDepartment(Doctors, addDoctorViewModel.SelectedDepartmentId);
+
+            if (isAdded)
+            {
+                TempData["DoctorAddMessgae"] = "doctor Added SuccessFully";
+            }
+            else
+            {
+                TempData["DoctorAddMessgae"] = "Doctor add failed";
+                addDoctorViewModel.Departments = _hospitalDbContext.Departments.ToList();
+            }
+            return RedirectToAction("ShowDoctors");
+
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int doctorID)
+        {
+            _doctorService.DeleteDoctor(doctorID);
+            return RedirectToAction("ShowDoctors");
+        }
     }
 }

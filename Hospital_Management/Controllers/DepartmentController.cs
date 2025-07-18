@@ -30,7 +30,7 @@ namespace Hospital_Management.Controllers
         public IActionResult AddDepartment(Department department)
         {
             int? _userid = HttpContext.Session.GetInt32("UserID");
-            department.UserId = _userid ?? 0;
+            department.UserId = _userid ?? 1;
 
             TempData["Message"] = null;
             if (_service.CheckDepartment(department.DepartmentName ?? " "))
@@ -38,12 +38,20 @@ namespace Hospital_Management.Controllers
                 TempData["Message"] = "Department Already Exits....";
                 TempData["Status"] = true;
             }
-            else if (ModelState.IsValid)
+
+            bool isAdded = _service.AddDepartment(department);
+            if (isAdded)
             {
-                _service.AddDepartment(department);
                 TempData["Message"] = "SuccessFaully Added...";
                 TempData["Status"] = false;
             }
+            else
+            {
+                TempData["Message"] = "DepartmenrAdd Process Failed";
+                TempData["Status"] = true;
+            }
+
+
             return View("AddDepartment");
         }
 

@@ -158,7 +158,11 @@ namespace Hospital_Management.Data
 
                 entity.Property(e => e.DoctorId).HasColumnName("DoctorID");
 
-                entity.Property(e => e.Modified).HasColumnType("datetime");
+                entity.Property(e => e.Modified).HasColumnType("datetime")
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+                
+                
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
