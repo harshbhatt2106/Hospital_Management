@@ -2,6 +2,7 @@
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Hospital_Management.Controllers
 {
@@ -86,6 +87,20 @@ namespace Hospital_Management.Controllers
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        public IActionResult UpdatePassword(int userID,string Password, string ConfirmPassword)
+        {
+            bool Istrue = adminServices.UpdatePasswordofAdmin(userID, Password, ConfirmPassword);
+            if (!Istrue)
+            {
+                TempData["UpdatepasswordMessage"] = "Old Password is Wrong";
+                return RedirectToAction("Profile");
+            }
+
+            TempData["UpdatepasswordMessage"] = "passsword Updated...";
+            return RedirectToAction("Profile");
         }
     }
 }

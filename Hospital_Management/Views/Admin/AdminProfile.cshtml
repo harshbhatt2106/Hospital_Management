@@ -9,12 +9,14 @@
 </head>
 
 <body class="bg-gray-100 p-6">
+    <a href="/Admin/AdminDashboard" class="btn btn-primary btn-sm px-2 py-1 rounded-pill" style="font-size: 0.8rem;">
+             Go to Dashboard
+        </a>
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Left Side: Profile -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">👤 Admin Profile</h2>
             <div class="flex items-center space-x-4 mb-6">
-                <img src="https://via.placeholder.com/80" alt="Avatar" class="rounded-full w-20 h-20 border-2 border-indigo-500" />
                 <div>
                     <h3 class="text-xl font-semibold">@Model.UserName</h3>
                     <p class="text-gray-500">Administrator</p>
@@ -27,7 +29,6 @@
             </div>
         </div>
 
-        <!-- Right Side: System Overview -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">🖥️ System Overview</h2>
             <ul class="space-y-2 text-gray-700">
@@ -37,15 +38,24 @@
                 <li>✔️ Active Sessions: 8</li>
             </ul>
         </div>
-
+      
         <!-- Reset Password -->
         <div class="bg-white rounded-2xl shadow-lg p-6 col-span-1">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">🔐 Reset Password</h2>
-            <form class="space-y-4">
-                <input type="password" placeholder="Old Password" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                <input type="password" placeholder="New Password" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                <input type="password" placeholder="Confirm New Password" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                <button class="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700 transition">Update Password</button>
+            <form class="space-y-4" asp-action="UpdatePassword" asp-controller="Admin">
+                <input type="hidden" asp-for="UserID" />
+                <input type="password" asp-for="Password" name="Password" placeholder="Old Password" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                <input type="password" placeholder="New Password" name="newpassword" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                <input type="password" placeholder="Confirm New Password" name="ConfirmPassword" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                @{
+                    if (@TempData["UpdatepasswordMessage"] != null)
+                    {
+                        <span id="error" class="text-danger">@TempData["UpdatepasswordMessage"]</span>
+                        <br />
+                    }
+                }
+                <span id="error" class="text-danger"></span>
+                <button id="btn" class="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700 transition">Update Password</button>
             </form>
         </div>
 
@@ -59,5 +69,35 @@
         </div>
     </div>
 
+    <script>
+        const _newpassword = document.getElementsByName('newpassword')
+        const _ConfirmPassword = document.getElementsByName('ConfirmPassword')
+        const data = document.getElementById('error')
+        const btn = document.getElementById('btn')
+
+        _ConfirmPassword[0].addEventListener('input',function()
+        {
+            setTimeout(function()
+            {
+              const np =  _newpassword[0].value;
+              const cf =  _ConfirmPassword[0].value;
+              console.log(np)
+              console.log(cf)
+
+              if(np!=cf)
+              {
+                   data.textContent  = "Password Does Not match"
+                   btn.disabled = true;
+              }
+              else
+              {
+                  btn.disabled = false;
+                  data.textContent  = ""
+              }
+            },500);
+        });
+
+    </script>
 </body>
 </html>
+

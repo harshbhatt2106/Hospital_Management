@@ -19,6 +19,7 @@ public class ErrorController : Controller
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
         logger.LogError($"the path {exceptionFeature.Path} throw execption {exceptionFeature.Path}");
+        ViewBag.messgae = $"the path {exceptionFeature.Path} throw execption {exceptionFeature.Path} error messgae is {exceptionFeature.Error.Message}";
         return View();
     }
 
