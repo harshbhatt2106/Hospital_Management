@@ -2,7 +2,6 @@
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Controllers

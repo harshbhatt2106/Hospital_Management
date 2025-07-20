@@ -1,3 +1,4 @@
+using Hospital_Management.CustomMiddleware;
 using Hospital_Management.Data;
 using Hospital_Management.Interfaces;
 using Hospital_Management.Services;
@@ -23,28 +24,37 @@ namespace Hospital_Management
             builder.Services.AddDbContext<HospitalDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddSingleton<IDepartmentService, DepartmentServices>();
-            builder.Services.AddScoped<IDoctorServices,DoctorService>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentServices>();
+            builder.Services.AddScoped<IAdminService, AdminServices>();
+            builder.Services.AddScoped<IDoctorServices, DoctorService>();
+            builder.Services.AddScoped<IEmailservices, EmailServices>();
 
             var app = builder.Build();
 
-            app.UseStatusCodePagesWithReExecute("/Error/InvalidURL");
-            app.UseExceptionHandler("/Error/General");
 
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
+                app.UseExceptionHandler("/Error/General");
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error/General");
+                app.UseDeveloperExceptionPage();
                 app.UseHsts();
             }
+
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
             app.UseSession();
 
-            app.UseAuthorization();
-
+            app.UseMiddleware<AuthenticationMiddleware>();
 
             app.MapControllerRoute(
                 name: "default",

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hospital_Management.Models
+﻿namespace Hospital_Management.Models
 {
     public partial class Patient
     {
@@ -9,7 +6,6 @@ namespace Hospital_Management.Models
         {
             Appointments = new HashSet<Appointment>();
         }
-
         public int PatientId { get; set; }
         public string Name { get; set; } = null!;
         public DateTime DateOfBirth { get; set; }
@@ -23,7 +19,6 @@ namespace Hospital_Management.Models
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
         public int UserId { get; set; }
-
         public virtual User User { get; set; } = null!;
         public virtual ICollection<Appointment> Appointments { get; set; }
     }

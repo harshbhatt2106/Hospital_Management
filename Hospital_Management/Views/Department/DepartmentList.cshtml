@@ -115,7 +115,8 @@
 
 @section Scripts {
     <script>
-        function updateStatus(button) {
+        function updateStatus(button)
+        {
             const id = button.getAttribute("data-id");
             const isActive = button.getAttribute("data-status") === "True"; 
 
@@ -128,7 +129,8 @@
                 return;
             }
 
-            fetch(`/Department/UpdateDepartmentStatus/${id}`, {
+            fetch(`/Department/UpdateDepartmentStatus/${id}`,
+            {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })

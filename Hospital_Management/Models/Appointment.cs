@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hospital_Management.Models
+﻿namespace Hospital_Management.Models
 {
     public partial class Appointment
     {
@@ -16,7 +13,6 @@ namespace Hospital_Management.Models
         public DateTime Modified { get; set; }
         public int UserId { get; set; }
         public decimal? TotalConsultedAmount { get; set; }
-
         public virtual Doctor Doctor { get; set; } = null!;
         public virtual Patient Patient { get; set; } = null!;
         public virtual User User { get; set; } = null!;

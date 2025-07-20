@@ -33,6 +33,12 @@ namespace Hospital_Management.Services
             return _hospitalDbContext.SaveChanges() > 0;
         }
 
+        public int countDoctors()
+        {
+            int count = _hospitalDbContext.Doctors.Where(x => x.IsActive == true).Count();
+            return count;
+        }
+
         public void DeleteDoctor(int doctorId)
         {
             var doctordID = _hospitalDbContext.DoctorDepartments
@@ -52,7 +58,7 @@ namespace Hospital_Management.Services
             throw new NotImplementedException();
         }
 
-        public string isDoctorExits(string doctorName,string phone)
+        public string isDoctorExits(string doctorName, string phone)
         {
             bool isDoctoravailabe = _hospitalDbContext.Doctors.Any(x => x.Name.ToLower() == doctorName.ToLower());
 

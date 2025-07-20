@@ -8,7 +8,7 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        overflow: hidden; /* 🚫 Remove scroll */
+        overflow: hidden;
         background-color: #f4f8fb;
     }
 
@@ -23,7 +23,7 @@
         max-width: 900px;
         width: 100%;
         max-height: 90vh;
-        overflow-y: auto; /* 🧼 Internal scroll if needed */
+        overflow-y: auto;
     }
 
     .card-body {
@@ -41,6 +41,15 @@
     .btn {
         min-width: 140px;
     }
+
+    .validation-summary-errors {
+        background-color: #ffe5e5;
+        border: 1px solid #f5c2c7;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #a94442;
+        margin-bottom: 1rem;
+    }
 </style>
 
 <div class="container py-5">
@@ -51,6 +60,7 @@
         <div class="card-body px-4 py-5">
             <form asp-action="Update" method="post">
                 <input type="hidden" asp-for="DoctorId" />
+
 
                 <div class="row g-4">
                     <div class="col-md-6">
@@ -88,10 +98,10 @@
                                     <div class="form-check">
                                         <input class="form-check-input"
                                                type="checkbox"
+                                               asp-for="SelectedDepartmentId"
                                                name="SelectedDepartmentId"
                                                value="@dept.DepartmentId"
-                                               id="dept_@dept.DepartmentId"
-                                        @(Model.SelectedDepartmentId != null && Model.SelectedDepartmentId.Contains(dept.DepartmentId) ? "checked" : "") />
+                                               id="dept_@dept.DepartmentId" required />
                                         <label class="form-check-label" for="dept_@dept.DepartmentId">
                                             @dept.DepartmentName
                                         </label>
@@ -101,6 +111,7 @@
                         </div>
                     </div>
                 </div>
+                <span asp-validation-for="Departments" class="text-danger small"></span>
 
                 <div class="mt-4">
                     <label asp-for="Specialization" class="form-label fw-semibold">Specialization</label>

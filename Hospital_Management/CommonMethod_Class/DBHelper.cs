@@ -28,6 +28,18 @@ namespace Hospital_Management.CommonMethod
             {
                 throw new Exception("Database Connection Failed", ex);
             }
+        } 
+        public static int ExecuteScaler(string Procedure, SqlParameter[]? parameters = null)
+        {
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand();
+                return sqlCommand.ExecuteWithScaler(Procedure);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database Connection Failed", ex);
+            }
         }
     }
 }

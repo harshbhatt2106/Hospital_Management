@@ -1,4 +1,6 @@
-﻿<h1>Content to harsh  bhatt</h1>
-<h1>Harshbhatt@gmail.com</h1>
-<p>@ViewBag.path</p>
-<p>@ViewBag.StackTrace</p>
+﻿@{
+    ViewData["Title"] = "Error";
+}
+<h2>Something went wrong!</h2>
+<p><strong>Error Message:</strong> @ViewBag.Message</p>
+<p><strong>Path:</strong> @ViewBag.Path</p>

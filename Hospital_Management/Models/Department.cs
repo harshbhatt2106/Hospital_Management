@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Hospital_Management.Models
 {
@@ -10,9 +8,8 @@ namespace Hospital_Management.Models
         {
             DoctorDepartments = new HashSet<DoctorDepartment>();
         }
-
         public int DepartmentId { get; set; }
-        
+   
         [Required(ErrorMessage = "DepartmentName Requried...")]
         public string DepartmentName { get; set; } = null!;
 

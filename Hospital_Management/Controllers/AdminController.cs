@@ -1,4 +1,5 @@
 ﻿using Hospital_Management.CommonMethod;
+using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,15 +7,40 @@ namespace Hospital_Management.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly IAdminService adminServices;
+        private readonly IDoctorServices doctorServices;
+        private readonly IDepartmentService departmentServices;
+        private readonly IEmailservices emailservices;
+
+        public AdminController(IAdminService _adminServices,
+                               IDoctorServices doctorServices,
+                               IDepartmentService departmentServices,
+                               IEmailservices emailservices)
+        {
+            this.adminServices = _adminServices;
+            this.doctorServices = doctorServices;
+            this.departmentServices = departmentServices;
+            this.emailservices = emailservices;
+        }
         public IActionResult Index()
         {
             return View();
         }
-      
+
         [Route("/Admin/AdminProfile")]
         public IActionResult Profile()
         {
-            return View("AdminProfile");
+            int? adminID = HttpContext.Session.GetInt32("UserID");
+
+            User? user = null;
+            if (adminID != null)
+            {
+                user = adminServices.GetAdmin((int)adminID);
+                ViewBag.departmentCount = departmentServices.CountDepartments();
+                ViewBag.doctorCount = doctorServices.countDoctors();
+                ViewBag.adminCount = adminServices.adminCount();
+            }
+            return View("AdminProfile", user);
         }
 
         [HttpGet]
@@ -32,15 +58,18 @@ namespace Hospital_Management.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string UserName,string Password)
-        {           
+        [Route("Admin/Login")]
+        public IActionResult Login(string UserName, string Password)
+        {
+            //throw new Exception("Just for try");
             try
             {
-                Admin admin = Helper_Method.CheckLogin(Password, UserName);
+                User admin = Helper_Method.CheckLogin(Password, UserName);
                 if (admin != null)
                 {
                     HttpContext.Session.SetInt32("UserID", admin.UserID);
-                    return View("AdminDashboard");
+                    //emailservices.SendEmailAsync("24030501004@darshan.ac.in", "Login", "Login");
+                    return RedirectToAction("AdminDashboard", "Admin");
                 }
                 else
                 {

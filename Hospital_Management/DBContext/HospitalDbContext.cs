@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Hospital_Management.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Hospital_Management.Models;
 
 namespace Hospital_Management.Data
 {
@@ -236,7 +233,7 @@ namespace Hospital_Management.Data
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.UserID).HasColumnName("UserID");
 
                 entity.Property(e => e.Created)
                     .HasColumnType("datetime")

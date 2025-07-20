@@ -1,7 +1,9 @@
 ﻿using Hospital_Management.CommonMethod;
+using Hospital_Management.CommonMethod_Class;
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using System.Data.SqlClient;
+using System.Drawing;
 
 namespace Hospital_Management.Services
 {
@@ -31,7 +33,6 @@ namespace Hospital_Management.Services
             }
             return _departments;
         }
-
         public bool AddDepartment(Department department)
         {
             string procedure = "SP_Add_Department";
@@ -46,7 +47,6 @@ namespace Hospital_Management.Services
             //ReloadDepartments();
             return isAdded;
         }
-
         public bool CheckDepartment(string DepartmentName)
         {
             SqlDataReader? reader = null;
@@ -83,13 +83,10 @@ namespace Hospital_Management.Services
             ReloadDepartments();
             return Isdeleted;
         }
-
-
         private void ReloadDepartments()
         {
             _departments = departments();
         }
-
         public bool UpdateDepartment(Department department)
         {
             string procedure = "SP_Update_Departement";
@@ -102,7 +99,6 @@ namespace Hospital_Management.Services
             bool isUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
             return isUpdated;
         }
-
         public bool setDepartmentStatus(int departmentID)
         {
             string procedure = "SP_ChangeActiveStatus_Department";
@@ -113,6 +109,13 @@ namespace Hospital_Management.Services
             bool isUpdated = DBHelper.ExecuteNonQuery(procedure, sqlParameters);
             ReloadDepartments();
             return isUpdated;
+        }
+
+        public int CountDepartments()
+        {
+            string procedure = "SP_COUNT_DEPARTMENT";
+            int departemntCount = DBHelper.ExecuteScaler(procedure);
+            return departemntCount;
         }
     }
 }

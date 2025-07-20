@@ -1,43 +1,41 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 
-namespace Hospital_Management.Controllers
+public class ErrorController : Controller
 {
-    public class ErrorController : Controller
+    private readonly ILogger<ErrorController> logger;
+
+    public ErrorController(ILogger<ErrorController> logger)
     {
-        [Route("Error/General")]
-        [AllowAnonymous]
-        public IActionResult General()
+        this.logger = logger;
+    }
+
+    [Route("/Error/General")]
+    [AllowAnonymous]
+
+    public IActionResult General()
+    {
+        var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+        logger.LogError($"the path {exceptionFeature.Path} throw execption {exceptionFeature.Path}");
+        return View();
+    }
+
+    [Route("Error/{statusCode}")]
+    [AllowAnonymous]
+    public IActionResult InvalidURL(int statusCode)
+    {
+        var result = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+        switch (statusCode)
         {
-            var execption = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            if (execption != null)
-            {
-                ViewBag.path = execption.Path;
-                ViewBag.StackTrace = execption.Error.StackTrace;
-                return View("Error");
-            }
-            else
-            {
-                ViewBag.path = "execption.Path not found";
-                ViewBag.StackTrace = "execption.Error.StackTrace not found";
-                return View("Error");
-            }
+            case 404:
+                ViewBag.ErrorMessage = $"You are Finding {result.OriginalPath} its not path of our system";
+                logger.LogWarning($"404 path is {result.OriginalPath} query string {result.OriginalQueryString}");
+                break;
         }
 
-        [Route("Error/InvalidUrl")]
-        public IActionResult InvalidUrl()
-        {
-            var data = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            if (data!=null)
-            {
-                ViewBag.URl_Name = data.OriginalPath;
-            }
-            else
-            {
-                ViewBag.URL_Name = "Unknown or missing URL";
-            }
-            return View();
-        }
+        return View("InvalidURL");
     }
+
 }

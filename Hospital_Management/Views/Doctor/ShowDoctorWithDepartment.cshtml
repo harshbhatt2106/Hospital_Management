@@ -16,7 +16,8 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="py-3 px-4 text-uppercase font-weight-bold">Doctor Name</th>
-                            <th class="py-3 px-4 text-uppercase font-weight-bold">Departments</th>
+                            <th class="py-3 px-4 text-uppercase font-weight-bold">Departments</th>                            
+                            <th class="py-3 px-4 text-uppercase font-weight-bold">PhoneNumber</th>                            
                             <th class="py-3 px-4 text-uppercase font-weight-bold text-end">Actions</th>
                         </tr>
                     </thead>
@@ -51,6 +52,9 @@
                                         </div>
                                     }
                                 </td>
+                                <td class="py-3 px-4 align-middle text">
+                                    <span>@doctor.Phone</span>
+                                </td>
                                 <td class="py-3 px-4 align-middle text-end">
                                     <div class="btn-group" role="group">
                                         <a class="btn btn-sm btn-outline-primary rounded-start" 
@@ -71,6 +75,7 @@
                                         </a>
                                     </div>
                                 </td>
+                               
                             </tr>
                         }
                     </tbody>
@@ -85,7 +90,6 @@
                 <div>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm mb-0">
-                            <!-- Pagination would go here -->
                         </ul>
                     </nav>
                 </div>
