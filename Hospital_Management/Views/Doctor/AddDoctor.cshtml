@@ -71,12 +71,12 @@
                                         <input class="form-check-input"
                                                type="checkbox"
                                                name="SelectedDepartmentId"
-                                               value="@dept.DepartmentId"
-                                               id="dept_@dept.DepartmentId"
+                                               value="@dept.Value"
+                                               id="dept_@dept.Value"
                                         required/>
                                         <span asp-validation-for="Departments" class="text-danger small"></span>
-                                        <label class="form-check-label" for="dept_@dept.DepartmentId">
-                                            @dept.DepartmentName
+                                        <label class="form-check-label" for="dept_@dept.Value">
+                                            @dept.Text
                                         </label>
                                     </div>
                                 </div>

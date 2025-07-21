@@ -98,13 +98,15 @@
                                     <div class="form-check">
                                         <input class="form-check-input"
                                                type="checkbox"
-                                               asp-for="SelectedDepartmentId"
+                                               id="@dept.Value"
                                                name="SelectedDepartmentId"
-                                               value="@dept.DepartmentId"
-                                               id="dept_@dept.DepartmentId" required />
-                                        <label class="form-check-label" for="dept_@dept.DepartmentId">
-                                            @dept.DepartmentName
+                                               value="@dept.Value"                                         
+                                               checked="@dept.Selected"
+                                        />
+                                        <label class="form-check-label" for="dept_@dept.Value">
+                                            @dept.Text
                                         </label>
+
                                     </div>
                                 </div>
                             }

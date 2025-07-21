@@ -2,6 +2,8 @@
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Controllers
@@ -23,10 +25,16 @@ namespace Hospital_Management.Controllers
 
         public IActionResult AddDoctor()
         {
+            var Departments = _hospitalDbContext.Departments.ToList();
             var DepartmentDDL = new AddDoctorViewModel()
             {
-                Departments = _hospitalDbContext.Departments.ToList()
+                Departments = Departments.Select(d => new SelectListItem
+                {
+                    Text = d.DepartmentName,
+                    Value = d.DepartmentId.ToString()
+                }).ToList()
             };
+
             return View(DepartmentDDL);
         }
 
@@ -57,7 +65,16 @@ namespace Hospital_Management.Controllers
             else
             {
                 TempData["DoctorAddMessgae"] = "Doctor add failed";
-                addDoctorViewModel.Departments = _hospitalDbContext.Departments.ToList();
+                var Departments = _hospitalDbContext.Departments.ToList();
+
+                var DepartmentDDL = new AddDoctorViewModel()
+                {
+                    Departments = Departments.Select(d => new SelectListItem
+                    {
+                        Text = d.DepartmentName,
+                        Value = d.DepartmentId.ToString()
+                    }).ToList()
+                };
             }
             return View("DoctorDashboard");
         }
@@ -78,13 +95,36 @@ namespace Hospital_Management.Controllers
             AddDoctorViewModel addDoctorViewModel = new AddDoctorViewModel();
 
             //Load All SeletedDepartment From DD table
-            addDoctorViewModel.SelectedDepartmentId = _hospitalDbContext.DoctorDepartments
+            addDoctorViewModel.SelectedDepartmentId =
+                        _hospitalDbContext.DoctorDepartments
                         .Where(x => x.DoctorId == doctorID)
                         .Select(x => x.DepartmentId)
                         .ToList();
 
             // get all department
-            addDoctorViewModel.Departments = _hospitalDbContext.Departments.ToList();
+            var DepartmentList = _hospitalDbContext.Departments.ToList();
+
+            foreach (var item in DepartmentList)
+            {
+                if (addDoctorViewModel.SelectedDepartmentId.Contains(item.DepartmentId))
+                {
+                    addDoctorViewModel.Departments.Add(new SelectListItem
+                    {
+                        Text = item.DepartmentName,
+                        Value = item.DepartmentId.ToString(),
+                        Selected = true
+                    });
+
+                }
+                else
+                {
+                    addDoctorViewModel.Departments.Add(new SelectListItem
+                    {
+                        Text = item.DepartmentName,
+                        Value = item.DepartmentId.ToString(),
+                    });
+                }
+            }
 
             var doctor = _hospitalDbContext.Doctors.FirstOrDefault(x => x.DoctorId == doctorID);
 
@@ -97,7 +137,6 @@ namespace Hospital_Management.Controllers
                 addDoctorViewModel.Email = doctor.Email;
                 addDoctorViewModel.Phone = doctor.Phone;
             }
-
             return View("UpdateDoctor", addDoctorViewModel);
         }
 
@@ -129,7 +168,18 @@ namespace Hospital_Management.Controllers
             else
             {
                 TempData["DoctorAddMessgae"] = "Doctor add failed";
-                addDoctorViewModel.Departments = _hospitalDbContext.Departments.ToList();
+             
+                // get departmenr From database 
+                var Departments = _hospitalDbContext.Departments.ToList();
+
+                var DepartmentDDL = new AddDoctorViewModel()
+                {
+                    Departments = Departments.Select(d => new SelectListItem
+                    {
+                        Text = d.DepartmentName,
+                        Value = d.DepartmentId.ToString()
+                    }).ToList()
+                };
             }
             return RedirectToAction("ShowDoctors");
 
@@ -144,10 +194,10 @@ namespace Hospital_Management.Controllers
 
         [HttpGet]
         [Route("/Doctor/isDoctorExitsOrNot/{doctorName}/{Phone}")]
-        public IActionResult IsDoctorNameExists(string doctorName,string Phone)
+        public IActionResult IsDoctorNameExists(string doctorName, string Phone)
         {
-            string isDoctore = _doctorService.isDoctorExits(doctorName,Phone);
-            return Ok(new {messgae = isDoctore});
+            string isDoctore = _doctorService.isDoctorExits(doctorName, Phone);
+            return Ok(new { messgae = isDoctore });
         }
     }
 }
