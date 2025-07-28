@@ -1,0 +1,10 @@
+﻿@model Hospital_Management.Models.Department
+
+<form asp-action="tryview" method="post">
+<select asp-items="ViewBag.Departments"  asp-for="DepartmentId">
+    <option value="">
+        select
+    </option>
+</select>
+    <button type="submit">Clikc</button>
+</form>

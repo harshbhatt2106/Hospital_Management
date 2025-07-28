@@ -1,0 +1,139 @@
+﻿@model Hospital_Management.Models.AddDoctorViewModel
+
+@{
+    ViewData["Title"] = "Update Doctor";
+}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f4f8fb;
+    }
+
+    .container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .card-body {
+        padding: 2rem !important;
+    }
+
+    .form-control, .form-check-input {
+        border-radius: 8px;
+    }
+
+    .form-check-label {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        min-width: 140px;
+    }
+
+    .validation-summary-errors {
+        background-color: #ffe5e5;
+        border: 1px solid #f5c2c7;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #a94442;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="card border-0 shadow rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 py-3">
+            <h3 class="mb-0"><i class="fas fa-user-md me-2"></i>Update Doctor</h3>
+        </div>
+        <div class="card-body px-4 py-5">
+            <form asp-action="Update" method="post">
+                <input type="hidden" asp-for="DoctorId" />
+
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label fw-semibold">Full Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter doctor name" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-semibold">Phone Number</label>
+                        <input asp-for="Phone" type="tel" class="form-control" placeholder="Enter phone number" />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Qualification" class="form-label fw-semibold">Qualification</label>
+                        <input asp-for="Qualification" class="form-control" placeholder="Enter qualification" />
+                        <span asp-validation-for="Qualification" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-semibold">Departments</label>
+                    <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                        <div class="row row-cols-1 row-cols-sm-2">
+                            @foreach (var dept in Model.Departments)
+                            {
+                                <div class="col mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               id="@dept.Value"
+                                               name="SelectedDepartmentId"
+                                               value="@dept.Value"                                         
+                                               checked="@dept.Selected"
+                                        />
+                                        <label class="form-check-label" for="dept_@dept.Value">
+                                            @dept.Text
+                                        </label>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Departments" class="text-danger small"></span>
+
+                <div class="mt-4">
+                    <label asp-for="Specialization" class="form-label fw-semibold">Specialization</label>
+                    <input asp-for="Specialization" class="form-control" placeholder="Enter specialization" />
+                    <span asp-validation-for="Specialization" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 me-2">
+                        <i class="fas fa-arrow-left me-1"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success rounded-pill px-4">
+                        <i class="fas fa-save me-1"></i>Update Doctor
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

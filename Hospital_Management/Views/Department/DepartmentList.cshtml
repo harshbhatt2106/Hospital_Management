@@ -1,0 +1,170 @@
+﻿@model List<Hospital_Management.Models.Department>
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/css/departmentlist.css" rel="stylesheet" />
+
+<div class="container-fluid py-4">
+
+    <a href="/Department/AddDepartment" class="btn btn-primary btn-sm px-2 py-1 rounded-pill" style="font-size: 0.8rem;">
+        <i class="fas fa-plus me-1"></i> Add Department
+    </a>
+
+    <div class="card shadow-sm rounded-3 overflow-hidden">
+        @{
+            if (@TempData["Department_Update_Message"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Department_Update_Message"]
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+        }
+        <div class="card-header bg-primary text-white py-3">
+            <h3 class="card-title mb-0 text-center">
+                Department Directory
+            </h3>
+        </div>
+
+        <div class="card-body p-0">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table id="tbl" class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="py-3">
+                                    <i class="fas fa-building me-1"></i> Department Name
+                                </th>
+                                <th scope="col" class="py-3">
+                                    <i class="fas fa-info-circle me-1"></i> Description
+                                </th>
+                                <th scope="col" class="pe-4 py-3">
+                                    <i class="fas fa-calendar-alt me-1"></i> Last Updated
+                                </th>
+                                <th scope="col" class="ps-4 py-3">Actions</th>
+                                <th scope="col" class="py-3">
+                                    <i class="fas fa-check-circle me-1"></i> Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dept in Model)
+                            {
+                                <tr class="hover-highlight">
+                                    <td class="py-3 fw-semibold text-primary">
+                                        <div class="d-flex align-items-center ">
+                                            <div>@dept.DepartmentName</div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 text-muted">@dept.Description</td>
+                                    <td class="pe-4 py-3">
+                                        <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                                            <i class="far fa-clock me-1"></i> @dept.Modified
+                                        </span>
+                                    </td>
+                                    <td class="ps-4 py-3">
+                                        <div class="d-flex gap-2">
+
+                                            <a asp-controller="Department"
+                                               asp-action="EditDepartment"
+                                               asp-route-id="@dept.DepartmentId"
+                                               class="btn btn-sm btn-outline-primary edit-btn">
+                                                <i class="material-icons" style="font-size:20px; color:blue;">edit</i>
+                                            </a>
+
+                                            <button type="button"
+                                                    class="btn btn-sm @(dept.IsActive ? "btn-outline-warning" : "btn-outline-success")"
+                                                    data-id="@dept.DepartmentId"
+                                                    data-status="@dept.IsActive"
+                                                    onclick="updateStatus(this)">
+                                                @(dept.IsActive ? "Disable" : "Activate")
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <span id="status-@dept.DepartmentId" class="badge @(dept.IsActive ? "bg-success" : "bg-danger")">
+                                            @(dept.IsActive ? "Active" : "Inactive")
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div id="noDepartmentsMessage" class="text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list fa-4x text-muted mb-4 opacity-50"></i>
+                        <h4 class="text-muted mb-3">No Departments Found</h4>
+                        <p class="text-muted mb-4">It looks like there are no departments to display at this time.</p>
+                        <a href="/Department/AddDepartment" class="btn btn-primary px-4 rounded-pill">
+                            <i class="fas fa-plus me-2">
+                            </i>Add New Department
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateStatus(button)
+        {
+            const id = button.getAttribute("data-id");
+            const isActive = button.getAttribute("data-status") === "True"; 
+
+            const confirmMsg = isActive
+                ? "Are you sure you want to deactivate this department?"
+                : "Are you sure you want to activate this department?";
+
+            if (!confirm(confirmMsg))
+            {
+                return;
+            }
+
+            fetch(`/Department/UpdateDepartmentStatus/${id}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) 
+                {
+                    return alert("Update failed");
+                }
+
+                const badge = document.getElementById("status-" + id);
+
+                if (isActive) 
+                {
+                    badge.innerText = "Inactive";
+                    badge.className = "badge bg-danger";
+
+                    button.innerText = "Activate";
+                    button.className = "btn btn-sm btn-outline-success";
+                    button.setAttribute("data-status", "False");
+                }
+                else 
+                {
+                    badge.innerText = "Active";
+                    badge.className = "badge bg-success";
+
+                    button.innerText = "Disable";
+                    button.className = "btn btn-sm btn-outline-warning";
+                    button.setAttribute("data-status", "True");
+                }
+            })
+            .catch(err => alert("Error: " + err));
+        }
+    </script>
+
+
+}

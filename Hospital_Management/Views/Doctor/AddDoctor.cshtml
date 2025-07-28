@@ -1,0 +1,135 @@
+﻿@model Hospital_Management.Models.AddDoctorViewModel
+
+@{
+    ViewData["Title"] = "Add Doctor";
+}
+
+<div class="container mt-5">
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h3 class="mb-0">Add New Doctor</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddDoctor" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" id="DoctorName" class="form-control" placeholder="Enter doctor name" />
+                        <span asp-validation-for="Name" id="nameValidationError" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-semibold"></label>
+                        <input asp-for="Phone" id="Phone" type="text" class="form-control" placeholder="Enter phone number" />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" id="Email" class="form-control" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Qualification" class="form-label fw-semibold"></label>
+                        <input asp-for="Qualification" class="form-control" placeholder="Enter qualification" />
+                        <span asp-validation-for="Qualification" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-semibold">Departments</label>
+                    <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                        <div class="row row-cols-1 row-cols-sm-2">
+                            @foreach (var dept in Model.Departments)
+                            {
+                                <div class="col mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="SelectedDepartmentId"
+                                               value="@dept.Value"
+                                               id="dept_@dept.Value"
+                                        required/>
+                                        <span asp-validation-for="Departments" class="text-danger small"></span>
+                                        <label class="form-check-label" for="dept_@dept.Value">
+                                            @dept.Text
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Specialization" class="form-label fw-semibold"></label>
+                    <input asp-for="Specialization" class="form-control" placeholder="Enter specialization" />
+                    <span asp-validation-for="Specialization" class="text-danger small"></span>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" id="addDoctor" class="btn btn-success px-4 py-2 rounded-pill">💾 Save Doctor</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2 px-4 py-2 rounded-pill">🔙 Cancel</a>
+                </div>
+                <p>
+                    @{
+                        if (TempData["DoctorAddMessgae"] != null)
+                        {
+                            @TempData["DoctorAddMessgae"]
+                        }
+                    }
+                    </>
+            </form>
+        </div>
+    </div>
+    <script>
+
+        const doctorName = document.getElementById('DoctorName');
+        const Email = document.getElementById('Email');
+        const phone = document.getElementById('Phone');
+        const error = document.getElementById('nameValidationError');
+        const doctorAddbtn = document.getElementById('addDoctor');
+        const feild = [Email,phone,doctorName];
+
+        feild.forEach((f)=>
+        {
+            f.addEventListener('blur',()=>
+            {
+                const Dname = doctorName.value;
+                const DPhone = phone.value;
+                if(Dname && DPhone)
+                {
+                        fetch(`/Doctor/isDoctorExitsOrNot/${encodeURIComponent(Dname)}/${encodeURIComponent(DPhone)}`)
+                        .then(res=>res.json())
+                        .then(val=>{
+                            const msg = val.messgae;
+                            if (msg === "DNAME")
+                            {
+                                error.textContent = "Doctor name already exists";
+                                doctorAddbtn.disabled = true;
+                            }
+                            else if (msg === "DPHONE")
+                            {
+                                error.textContent = "Phone number already exists";
+                                doctorAddbtn.disabled = true;
+                            }
+                            else
+                            {
+                                error.textContent = " ";
+                                doctorAddbtn.disabled = false;
+                            }
+                        })
+                }// for endd
+            })// end event listen
+        })
+
+    </script>
+    @section Scripts
+    {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</div>

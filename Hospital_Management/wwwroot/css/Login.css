@@ -1,0 +1,115 @@
+﻿:root {
+    --hospital-blue: #006494;
+    --hospital-dark: #00466d;
+    --hospital-light: #e6f0f7;
+}
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 0 15px;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border-top: 5px solid var(--hospital-blue);
+}
+
+.hospital-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--hospital-light);
+    border-radius: 50%;
+    color: var(--hospital-blue);
+    font-size: 32px;
+}
+
+.login-title {
+    color: var(--hospital-blue);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    color: #6c757d;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+    .input-group .form-control {
+        height: 48px;
+        padding-left: 40px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+        .input-group .form-control:focus {
+            border-color: var(--hospital-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0, 100, 148, 0.2);
+        }
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    z-index: 5;
+}
+
+.login-btn {
+    background-color: var(--hospital-blue);
+    border: none;
+    height: 48px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    color: white;
+}
+
+    .login-btn:hover {
+        background-color: var(--hospital-dark);
+    }
+
+.forgot-link {
+    display: block;
+    margin-top: 15px;
+    text-align: right;
+    color: #6c757d;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+    .forgot-link:hover {
+        color: var(--hospital-blue);
+    }
+
+.footer-text {
+    margin-top: 30px;
+    color: #6c757d;
+    font-size: 13px;
+}

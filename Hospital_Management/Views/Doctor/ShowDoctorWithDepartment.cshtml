@@ -1,0 +1,150 @@
+﻿@model List<Hospital_Management.Models.Doctor>
+
+<div class="container-fluid py-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0"><i class="fas fa-user-md me-2"></i>Doctor List</h2>
+                <a class="btn btn-light" asp-action="AddDoctor">
+                    <i class="fas fa-plus-circle me-1"></i> Add New Doctor
+                </a>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4 text-uppercase font-weight-bold">Doctor Name</th>
+                            <th class="py-3 px-4 text-uppercase font-weight-bold">Departments</th>                            
+                            <th class="py-3 px-4 text-uppercase font-weight-bold">PhoneNumber</th>                            
+                            <th class="py-3 px-4 text-uppercase font-weight-bold text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var doctor in Model)
+                        {
+                            <tr>
+                                <td class="py-3 px-4 align-middle">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm bg-info rounded-circle me-3">
+                                            <span class="avatar-text text-white">@doctor.Name.Substring(0,1)</span>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">@doctor.Name</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 align-middle">
+                                    @if (doctor.DoctorDepartments == null || !doctor.DoctorDepartments.Any())
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-exclamation-circle me-1"></i> No departments
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach (var dept in doctor.DoctorDepartments.Select(dd => dd.Department.DepartmentName))
+                                            {
+                                                <span class="badge bg-primary-light text-primary">@dept</span>
+                                            }
+                                        </div>
+                                    }
+                                </td>
+                                <td class="py-3 px-4 align-middle text">
+                                    <span>@doctor.Phone</span>
+                                </td>
+                                <td class="py-3 px-4 align-middle text-end">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-sm btn-outline-primary rounded-start" 
+                                           asp-action="Update" 
+                                           asp-route-doctorID="@doctor.DoctorId"
+                                           data-bs-toggle="tooltip" 
+                                           title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-danger rounded-end" 
+                                           asp-action="Delete" 
+                                           asp-controller="Doctor" 
+                                           onclick="return ConfirmDeleteDoctorDepartment();" 
+                                           asp-route-doctorID="@doctor.DoctorId"
+                                           data-bs-toggle="tooltip" 
+                                           title="Delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                               
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    Showing <strong>@Model.Count</strong> doctors
+                </div>
+                <div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm mb-0">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ConfirmDeleteDoctorDepartment() {
+        return confirm("⚠️ Warning!\nDeleting this doctor will remove them from all assigned departments.\n\nAre you sure you want to proceed?");
+    }
+    
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .avatar-text {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .badge.bg-primary-light {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.01);
+    }
+    
+    .btn-group .btn {
+        padding: 0.375rem 0.75rem;
+    }
+</style>

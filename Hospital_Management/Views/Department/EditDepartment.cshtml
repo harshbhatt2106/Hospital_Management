@@ -1,0 +1,95 @@
+﻿@model Department
+
+@{
+    ViewData["Title"] = "Update Department";
+    // Layout = null;
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-edit me-2"></i> Update Department
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Update" class="row g-3">
+
+                @* Hidden ID *@
+                <input type="hidden" asp-for="DepartmentId" />
+
+                <div class="col-md-12">
+                    <label asp-for="DepartmentName" class="form-label fw-semibold">Department Name</label>
+                    <input asp-for="DepartmentName" id="deptName" class="form-control" placeholder="Enter department name" />
+                    <span asp-validation-for="DepartmentName" id="deptError" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" id="sub" class="btn btn-success me-2">
+                        <i class="fas fa-save me-1"></i> Update
+                    </button>
+                    <a asp-action="DepartmentList" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+
+        const deptName = document.getElementById('deptName');
+        const deptError = document.getElementById('deptError');
+        const btn = document.getElementById("sub");
+        const orignol = deptName.value;
+
+        deptName.addEventListener('blur',function()
+        {
+           let current = deptName.value;
+
+           if(deptName.value.trim()==='')
+           {
+                deptError.textContent = "please Fill blank";
+                return;
+           }
+
+            if(orignol==current)
+            {
+                btn.disabled = false;
+                return;
+            }
+
+               const val = deptName.value.trim().toUpperCase();
+               fetch('/Department/DepartmentExits/' + encodeURIComponent(val),{})
+                .then(res=>res.json())
+                .then(data=>{
+                    if(data==true)
+                    {
+                        deptError.textContent = "Department Already Exist";
+                        btn.disabled = true;
+                    }
+                    else
+                    {
+                        deptError.textContent = "";
+                        btn.disabled = false;
+                    }
+                })
+                .catch(() => {
+                    btn.disabled = true;
+                    deptError.textContent = "Server error!";
+                });
+
+        })
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

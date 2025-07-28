@@ -1,0 +1,101 @@
+﻿@model Hospital_Management.Models.Department
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-4">
+
+    @{
+        ViewData["Title"] = "Add Department";
+    }
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-top border-3" style="border-color: #006494;">
+                    <div class="card-header text-white" style="background-color: #006494;">
+                        <h4 class="mb-0">Add Department</h4>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="AddDepartment">
+                            <div class="mb-3">
+                                <label asp-for="DepartmentName" class="form-label">Department Name</label>
+                                <input asp-for="DepartmentName" id="DN" class="form-control" placeholder="Enter department name" required />
+                                <span asp-validation-for="DepartmentName" id="deptError" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <textarea asp-for="Description" id="DS" class="form-control" rows="3" placeholder="Write short description..." required></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <button type="submit" id="sbtn" onclick="return CreatePop();" class="btn text-white w-100" style="background-color: #006494;">Submit</button>
+
+                            @{
+                                if (TempData["Message"] != null)
+                                {
+                                    <div class="alert @(Convert.ToBoolean(TempData["Status"]) ? "alert-danger" : "alert-success")" role="alert">
+                                        @TempData["Message"]
+                                    </div>
+                                }                               
+                            }
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function CreatePop()
+        {
+            return confirm("Do you Really Want To Add Department?");
+        }
+        const inputs = document.querySelectorAll('textarea,input');
+             inputs.forEach(i => {
+            i.value = '';
+        });
+
+        const DepartmentName = document.getElementById('DN');
+        const deptError = document.getElementById('deptError');
+        const btn = document.getElementById('sbtn');
+        const orignol = DepartmentName.value;
+
+        DepartmentName.addEventListener('blur',function()
+        {
+
+            if(DepartmentName.value.trim()==='')
+            {
+                deptError.textContent = "please Fill blank";
+                btn.disabled = true;
+                return;
+            }
+
+            const val =  DepartmentName.value.trim();
+
+            fetch('/Department/DepartmentExits/' + encodeURIComponent(val),{})
+            .then(res=>res.json())
+            .then(data=>
+            {
+                if(data==true)
+                {
+                    deptError.textContent="Department Already Exits";
+                    btn.disabled = true;
+                }
+                else
+                {
+                    deptError.textContent="";
+                    btn.disabled = false;
+                }
+            })
+        })
+
+    </script>
+
+    @section Scripts
+    {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</div>
