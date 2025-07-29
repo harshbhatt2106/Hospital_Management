@@ -3,7 +3,6 @@ using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Controllers
@@ -125,7 +124,7 @@ namespace Hospital_Management.Controllers
                     });
                 }
             }
-
+            // get doctor Details For Update
             var doctor = _hospitalDbContext.Doctors.FirstOrDefault(x => x.DoctorId == doctorID);
 
             if (doctor != null)

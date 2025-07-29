@@ -10,6 +10,7 @@
             Doctors = new HashSet<Doctor>();
             Patients = new HashSet<Patient>();
         }
+        
         public int UserID { get; set; }
         public string UserName { get; set; } = null!;
         public string Password { get; set; } = null!;

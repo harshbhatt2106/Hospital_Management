@@ -31,7 +31,6 @@ namespace Hospital_Management.Controllers
         public IActionResult Profile()
         {
             int? adminID = HttpContext.Session.GetInt32("UserID");
-
             User? user = null;
             if (adminID != null)
             {
@@ -104,9 +103,10 @@ namespace Hospital_Management.Controllers
 
         [HttpPost]
         [Route("/Admin/Forgetpassword")]
-        public IActionResult Forgetpassword(int UserID, string Email)
+        public IActionResult Forgetpassword(string Email)
         {
-            var IsGamilValid = adminServices.GetAdmin(UserID);
+            var IsGamilValid = adminServices.
+
             if (IsGamilValid.Email != Email)
             {
                 TempData["ValidGmail"] = "This Email Is Not Registerd";
@@ -138,26 +138,31 @@ namespace Hospital_Management.Controllers
 
         }
 
-
+        [HttpGet]
+        [Route("/Admin/ResetPassword")]
         public IActionResult ResetPassword()
         {
             return View();
         }
-
-        [Route("/Admin/ResetPassword")]
         [HttpPost]
-        public IActionResult ResetPassword(int UserID, string ConfirmPassword)
+        public IActionResult ResetPassword(string Password)
         {
-            bool result = adminServices.UpdatePasswordfAdmin(UserID, ConfirmPassword, null, true);
+
+            int? userID = HttpContext.Session.GetInt32("UserID");
+            bool result = adminServices.UpdatePasswordfAdmin(userID.Value, Password, null, true);
             if (result)
             {
-                return RedirectToAction("Admin", "Dashboard");
+                return RedirectToAction("Profile", "Admin");
+            }
+            else
+            {
+                TempData["UpdatePasswordMessage"] = "Your Password Not be Updated";
             }
             return View();
         }
 
         [Route("/Admin/VerifyOTP/{_otp}")]
-        public JsonResult VerifyOTP(int _otp)
+        public JsonResult VerifyOTP(int _otp = 12)
         {
             int _EnterdOTP = _otp;
             int AdminOTP = HttpContext.Session.GetInt32("AdminOTP") ?? 0;
@@ -165,7 +170,7 @@ namespace Hospital_Management.Controllers
 
             DateTime et = DateTime.Parse(expiryTime);
 
-            if (_EnterdOTP == AdminOTP && et > DateTime.Now)
+            if (AdminOTP == AdminOTP && et > DateTime.Now)
             {
                 return Json(new
                 {

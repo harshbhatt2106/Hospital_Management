@@ -26,6 +26,8 @@
                 <p><strong>Email:</strong> @Model.Email</p>
                 <p><strong>Phone:</strong> @Model.MobileNo</p>
                 <p><strong>Joined:</strong> @Model.Created</p>
+                <p><strong>Joined:</strong> @Model.Password</p>
+
             </div>
         </div>
 
@@ -59,25 +61,6 @@
                 <button id="btn" class="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700 transition">Update Password</button>
             </form>
         </div>
-
-        <!-- Forgot Password -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 col-span-1">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">❓ Forgot Password</h2>
-            <form class="space-y-4" asp-action="Forgetpassword">
-                <input type="hidden" asp-for="UserID"/> 
-                <input type="email" placeholder="Enter your email" asp-for="Email" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" required />
-                <button class="bg-red-600 text-white px-6 py-2 rounded-xl hover:bg-red-700 transition">Send Recovery Link</button>
-
-                <span asp-validation-for="Email"> 
-                </span>
-                    @{
-                        if (@TempData["ValidGmail"]!=null)
-                        {
-                            <sapn>@TempData["ValidGmail"]</sapn>
-                        }
-                    }
-            </form>
-        </div>
     </div>
 
     <script>
@@ -92,8 +75,6 @@
             {
               const np =  _newpassword[0].value;
               const cf =  _ConfirmPassword[0].value;
-              console.log(np)
-              console.log(cf)
 
               if(np!=cf)
               {

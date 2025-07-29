@@ -1,6 +1,7 @@
 ﻿using Hospital_Management.Data;
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Hospital_Management.Services
 {
@@ -16,8 +17,11 @@ namespace Hospital_Management.Services
         {
             return _context.Users.Count();
         }
-
-
+        public bool AdminEmailValid(string userData)
+        {
+            bool a = _context.Users.Any(u => u.Email == userData);
+            return a;
+        }
         public User GetAdmin(int adminID)
         {
             User admin = _context.Users.Find(adminID);
