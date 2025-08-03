@@ -1,9 +1,7 @@
 ﻿using Hospital_Management.CommonMethod;
-using Hospital_Management.CommonMethod_Class;
 using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using System.Data.SqlClient;
-using System.Drawing;
 
 namespace Hospital_Management.Services
 {

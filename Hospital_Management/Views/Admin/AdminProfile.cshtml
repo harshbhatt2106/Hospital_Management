@@ -1,5 +1,6 @@
-﻿@model User
+﻿@model Tuple<User, List<User>>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -9,87 +10,133 @@
 </head>
 
 <body class="bg-gray-100 p-6">
-    <a href="/Admin/AdminDashboard" class="btn btn-primary btn-sm px-2 py-1 rounded-pill" style="font-size: 0.8rem;">
-             Go to Dashboard
+    <!-- Go to Dashboard -->
+    <div class="mb-4">
+        <a href="/Admin/AdminDashboard"
+           class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm">
+            ⬅️ Go to Dashboard
         </a>
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Left Side: Profile -->
+    </div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Admin Profile -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">👤 Admin Profile</h2>
-            <div class="flex items-center space-x-4 mb-6">
-                <div>
-                    <h3 class="text-xl font-semibold">@Model.UserName</h3>
-                    <p class="text-gray-500">Administrator</p>
-                </div>
-            </div>
-            <div class="space-y-2 text-gray-700">
-                <p><strong>Email:</strong> @Model.Email</p>
-                <p><strong>Phone:</strong> @Model.MobileNo</p>
-                <p><strong>Joined:</strong> @Model.Created</p>
-                <p><strong>Joined:</strong> @Model.Password</p>
 
+            <div class="space-y-2 text-gray-700">
+                <p><strong>Name:</strong> @Model.Item1.UserName</p>
+                <p><strong>Email:</strong> @Model.Item1.Email</p>
+                <p><strong>Phone:</strong> @Model.Item1.MobileNo</p>
+                <p><strong>Joined:</strong> @Model.Item1.Created?.ToString("dd MMM yyyy")</p>
+            </div>
+
+            <div class="mt-4">
+                <a asp-action="AddAdmin" asp-controller="Admin"
+                   class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    ➕ Add Admin
+                </a>
             </div>
         </div>
 
-
+        <!-- System Overview -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">🖥️ System Overview</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">📊 System Overview</h2>
             <ul class="space-y-2 text-gray-700">
-                <li>✔️ Total Users: @ViewBag.adminCount</li>
-                <li>✔️ Total Doctors: @ViewBag.doctorCount</li>
-                <li>✔️ Total Departments: @ViewBag.departmentCount</li>
-                <li>✔️ Active Sessions: 8</li>
+                <li>👥 Total Users: <strong>@ViewBag.adminCount</strong></li>
+                <li>🧑‍⚕️ Total Doctors: <strong>@ViewBag.doctorCount</strong></li>
+                <li>🏥 Total Departments: <strong>@ViewBag.departmentCount</strong></li>
+                <li>🟢 Active Sessions: <strong>8</strong></li>
             </ul>
         </div>
-      
+
         <!-- Reset Password -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 col-span-1">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">🔐 Reset Password</h2>
-            <form class="space-y-4" asp-action="UpdatePassword" asp-controller="Admin">
-                <input type="hidden" asp-for="UserID" />
-                <input type="password" asp-for="Password" name="Password" placeholder="Old Password" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                <input type="password" placeholder="New Password" name="newpassword" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                <input type="password" placeholder="Confirm New Password" name="ConfirmPassword" class="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                @{
-                    if (@TempData["UpdatepasswordMessage"] != null)
-                    {
-                        <span id="error" class="text-danger">@TempData["UpdatepasswordMessage"]</span>
-                        <br />
-                    }
+            <form class="space-y-4" asp-action="UpdatePassword" asp-controller="Admin" method="post">
+                
+                <input type="hidden" asp-for="@Model.Item1.UserID" name="UserID" />
+                
+                <input type="password" asp-for="@Model.Item1.Password"  name="Password" placeholder="Old Password"
+                       class="w-full border rounded-xl px-4 py-2" required />
+                
+                       <input type="password" placeholder="New Password" name="Password"
+                       class="w-full border rounded-xl px-4 py-2" />
+                
+                       <input type="password" placeholder="Confirm New Password" name="ConfirmPassword"
+                       class="w-full border rounded-xl px-4 py-2" />
+                
+                       @if (TempData["UpdatepasswordMessage"] != null)
+                {
+                    <span class="text-red-600 font-medium">@TempData["UpdatepasswordMessage"]</span>
                 }
-                <span id="error" class="text-danger"></span>
-                <button id="btn" class="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700 transition">Update Password</button>
+                <span id="error" class="text-red-600 font-medium"></span>
+                <button id="btn"
+                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">
+                    🔄 Update Password
+                </button>
+
             </form>
         </div>
     </div>
 
+    <!-- All Admins List -->
+    <div class="max-w-7xl mx-auto mt-10 bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">👥 All Admins</h2>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mobile</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    @for (int i = 0; i < Model.Item2.Count; i++)
+                    {
+                        var admin = Model.Item2[i];
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">@((i + 1))</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@admin.UserName</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@admin.Email</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@admin.MobileNo</td>
+                            <td class="px-6 py-4 whitespace-nowrap">@admin.Created?.ToString("dd MMM yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
-        const _newpassword = document.getElementsByName('newpassword')
-        const _ConfirmPassword = document.getElementsByName('ConfirmPassword')
-        const data = document.getElementById('error')
-        const btn = document.getElementById('btn')
+        const _newpassword = document.getElementsByName('Password');
+        const _ConfirmPassword = document.getElementsByName('ConfirmPassword');
+        const data = document.getElementById('error');
+        const btn = document.getElementById('btn');
 
-        _ConfirmPassword[0].addEventListener('input',function()
+        _ConfirmPassword[0].addEventListener('input', function () 
         {
-            setTimeout(function()
+            setTimeout(function () 
             {
-              const np =  _newpassword[0].value;
-              const cf =  _ConfirmPassword[0].value;
-
-              if(np!=cf)
-              {
-                   data.textContent  = "Password Does Not match"
-                   btn.disabled = true;
-              }
-              else
-              {
-                  btn.disabled = false;
-                  data.textContent  = ""
-              }
-            },500);
+                const np = _newpassword[0].value;
+                const cf = _ConfirmPassword[0].value;
+                if (np !== cf) 
+                {
+                    data.textContent = "❌ Password does not match";
+                    btn.disabled = true;
+                } 
+                else 
+                {
+                    data.textContent = "";
+                    btn.disabled = false;
+                }
+            }, 300);
         });
-
     </script>
+
 </body>
 </html>
-

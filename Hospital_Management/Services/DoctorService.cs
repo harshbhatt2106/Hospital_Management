@@ -47,12 +47,7 @@ namespace Hospital_Management.Services
             _hospitalDbContext.RemoveRange(doctordID);
             _hospitalDbContext.SaveChanges();
         }
-
-        public List<Doctor> GetAllDoctors()
-        {
-            return _hospitalDbContext.Doctors.ToList();
-        }
-
+       
         public Doctor GetDoctorById(int doctorId)
         {
             throw new NotImplementedException();
@@ -99,6 +94,17 @@ namespace Hospital_Management.Services
             _hospitalDbContext.SaveChanges();
 
             return true;
+        }
+
+        public List<Doctor> GetAllDoctors()
+        {
+            List<Doctor> doctor = _hospitalDbContext.Doctors
+               .Include(d => d.DoctorDepartments)
+               .ThenInclude(d => d.Department)
+               .ToList();
+
+            return doctor;
+
         }
     }
 }

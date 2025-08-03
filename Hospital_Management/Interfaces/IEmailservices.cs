@@ -2,6 +2,6 @@
 {
     public interface IEmailservices
     {
-        void SendEmailAsync(string toEmail, string subject, string body);
+        bool SendEmail(string toEmail, string subject, string body);
     }
 }

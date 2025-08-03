@@ -1,20 +1,21 @@
-﻿using Hospital_Management.Data;
-using Hospital_Management.Interfaces;
+﻿using Hospital_Management.Interfaces;
 using Hospital_Management.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management.Controllers
 {
     public class DoctorController : Controller
     {
         private readonly IDoctorServices _doctorService;
-        private readonly HospitalDbContext _hospitalDbContext;
-        public DoctorController(IDoctorServices doctorService, HospitalDbContext hospitalDbContext)
+        private readonly IDepartmentService _departementServices;
+        private readonly IDoctorDepartment doctorDepartment;
+
+        public DoctorController(IDoctorServices doctorService,IDepartmentService departmentService,IDoctorDepartment doctorDepartment)
         {
+            this.doctorDepartment = doctorDepartment;   
+            _departementServices = departmentService;
             _doctorService = doctorService;
-            _hospitalDbContext = hospitalDbContext;
         }
 
         public IActionResult DoctorDashboard()
@@ -24,7 +25,7 @@ namespace Hospital_Management.Controllers
 
         public IActionResult AddDoctor()
         {
-            var Departments = _hospitalDbContext.Departments.ToList();
+            var Departments = _departementServices.departments().ToList();
             var DepartmentDDL = new AddDoctorViewModel()
             {
                 Departments = Departments.Select(d => new SelectListItem
@@ -64,7 +65,7 @@ namespace Hospital_Management.Controllers
             else
             {
                 TempData["DoctorAddMessgae"] = "Doctor add failed";
-                var Departments = _hospitalDbContext.Departments.ToList();
+                var Departments = _departementServices.departments().ToList();
 
                 var DepartmentDDL = new AddDoctorViewModel()
                 {
@@ -81,11 +82,7 @@ namespace Hospital_Management.Controllers
 
         public IActionResult ShowDoctors()
         {
-            var doctor = _hospitalDbContext.Doctors
-                .Include(d => d.DoctorDepartments)
-                .ThenInclude(d => d.Department)
-                .ToList();
-
+            var doctor = _doctorService.GetAllDoctors();
             return View("ShowDoctorWithDepartment", doctor);
         }
 
@@ -94,14 +91,10 @@ namespace Hospital_Management.Controllers
             AddDoctorViewModel addDoctorViewModel = new AddDoctorViewModel();
 
             //Load All SeletedDepartment From DD table
-            addDoctorViewModel.SelectedDepartmentId =
-                        _hospitalDbContext.DoctorDepartments
-                        .Where(x => x.DoctorId == doctorID)
-                        .Select(x => x.DepartmentId)
-                        .ToList();
+            addDoctorViewModel.SelectedDepartmentId = doctorDepartment.DepartmentIds(doctorID);
 
             // get all department
-            var DepartmentList = _hospitalDbContext.Departments.ToList();
+            var DepartmentList = _departementServices.departments().ToList();
 
             foreach (var item in DepartmentList)
             {
@@ -124,8 +117,9 @@ namespace Hospital_Management.Controllers
                     });
                 }
             }
+
             // get doctor Details For Update
-            var doctor = _hospitalDbContext.Doctors.FirstOrDefault(x => x.DoctorId == doctorID);
+            var doctor = _doctorService.GetAllDoctors().FirstOrDefault(x => x.DoctorId == doctorID);
 
             if (doctor != null)
             {
@@ -169,7 +163,7 @@ namespace Hospital_Management.Controllers
                 TempData["DoctorAddMessgae"] = "Doctor add failed";
              
                 // get department From database 
-                var Departments = _hospitalDbContext.Departments.ToList();
+                var Departments = _departementServices.departments().ToList();
 
                 var DepartmentDDL = new AddDoctorViewModel()
                 {

@@ -13,6 +13,20 @@ namespace Hospital_Management.Services
             _context = hospitalDbContext;
         }
 
+        public bool AddAdmin(User admin)
+        {
+            admin.Created = DateTime.Now;
+            _context.Users.Add(admin);
+            if (_context.SaveChanges() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public int adminCount()
         {
             return _context.Users.Count();
@@ -22,7 +36,7 @@ namespace Hospital_Management.Services
             bool a = _context.Users.Any(u => u.Email == userData);
             return a;
         }
-        public User GetAdmin(int adminID)
+        public User GetAdminByID(int adminID)
         {
             User admin = _context.Users.Find(adminID);
 
@@ -36,23 +50,25 @@ namespace Hospital_Management.Services
             }
         }
 
-        public bool UpdatePasswordfAdmin(int id, string newpassword, string? password = null, bool IsForget = false)
+        public List<User> GetAdmins()
+        {
+            List<User> users = _context.Users.ToList();
+            return users;
+        }
+
+        public bool UpdatePasswordfAdmin(int id, string newpassword, string password)
         {
 
-            if (!IsForget)
+            // get old password
+            var oldpassword = _context.Users
+                             .Where(x => x.UserID == id)
+                             .Select(x => x.Password)
+                             .FirstOrDefault();
+
+            if (password != oldpassword)
             {
-                // get old password
-                var oldpassword = _context.Users
-                                 .Where(x => x.UserID == id)
-                                 .Select(x => x.Password)
-                                 .FirstOrDefault();
-
-                if (password != oldpassword)
-                {
-                    return false;
-                }
+                return false;
             }
-
             try
             {
                 var data = _context.Users.FirstOrDefault(x => x.UserID == id);
@@ -60,14 +76,28 @@ namespace Hospital_Management.Services
                     return false;
 
                 data.Password = newpassword;
-                _context.SaveChanges();
-                return true;
+                bool IsUpdate = _context.SaveChanges() > 0 ? true : false;
+                return IsUpdate;
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }
+        }
 
+        public bool UpdateUserForgetPassword(string Gmail, string password)
+        {
+            try
+            {
+                var data = _context.Users.FirstOrDefault(x => x.Email == Gmail);
+                data.Password = password;
+                bool result = _context.SaveChanges() > 0 ? true : false;
+                return result;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

@@ -31,15 +31,18 @@ namespace Hospital_Management.Controllers
         public IActionResult Profile()
         {
             int? adminID = HttpContext.Session.GetInt32("UserID");
-            User? user = null;
+            User? usersByID = null;
             if (adminID != null)
             {
-                user = adminServices.GetAdmin((int)adminID);
+                usersByID = adminServices.GetAdminByID((int)adminID);
                 ViewBag.departmentCount = departmentServices.CountDepartments();
+                List<User> users = adminServices.GetAdmins();
                 ViewBag.doctorCount = doctorServices.countDoctors();
                 ViewBag.adminCount = adminServices.adminCount();
+                var model = Tuple.Create(usersByID, users);
+                return View("AdminProfile", model);
             }
-            return View("AdminProfile", user);
+            return View("AdminProfile", null);
         }
 
         [HttpGet]
@@ -87,6 +90,88 @@ namespace Hospital_Management.Controllers
             return RedirectToAction("Login");
         }
 
+        [HttpGet]
+        public IActionResult AddAdmin()
+        {
+            return View();
+        }
+
+        [Route("/Admin/AddAdmin")]
+        [HttpPost]
+        public IActionResult AddAdmin(User user)
+        {
+            user.Created = DateTime.Now;
+            adminServices.AddAdmin(user);
+            return View();
+        }
+    
+        [HttpGet]
+        public IActionResult Forgetpassword()
+        {
+            return View();
+        }
+
+        [Route("/Admin/SendOTP")]
+        [HttpPost]
+        public JsonResult SendOTP([FromBody] string Email)
+        {
+
+            // Generate OTP
+            int OTP = new Random().Next(100000, 999999);
+            HttpContext.Session.SetInt32("AdminOTP", OTP);
+            HttpContext.Session.SetString("ForgetPasswordProgress", "True");
+            string Subject_of_ForgetEmail = "Your Admin Account OTP for Password Reset"; ;
+            string body = $@"
+                        <h2>Password Reset Request</h2>
+                        <p>Dear Admin,</p>
+                        <p>We received a request to reset the password for your admin account.</p>
+                        <p><strong>Your OTP is: <span style='color:blue; font-size:18px;'>{OTP}</span></strong></p>
+                        <p>Please enter this OTP on the verification screen to proceed.</p>
+                        <p>If you did not request this, please ignore this email.</p>
+                        <p>This OTP valid 1 Time </p> 
+                        <br/>
+                        <p>Thanks,<br/>Hospital Management Team</p>
+                    ";
+
+            // send into Email
+            bool IsMailSendSuccess = emailservices.SendEmail(Email, Subject_of_ForgetEmail, body);
+            return Json(new { success = IsMailSendSuccess });
+        }
+
+
+        [Route("/Admin/VerifyGmail")]
+        [HttpPost]
+        public JsonResult VerifyGmail([FromBody] string Email)
+        {
+            bool IsGamilValid = adminServices.GetAdmins().Any(x => x.Email.ToLower() == Email.ToLower());
+            ViewBag.Email = Email;
+            return Json(new { success = IsGamilValid });
+        }
+
+        [HttpGet]
+        [Route("/Admin/ResetPassword")]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult ResetPassword(string Password)
+        {
+            int? userID = HttpContext.Session.GetInt32("UserID");
+            bool result = adminServices.UpdateUserForgetPassword(ViewBag.Email, Password);
+            if (result)
+            {
+                return RedirectToAction("Login", "Admin");
+            }
+            else
+            {
+                TempData["UpdatePasswordMessage"] = "Your Password Not be Updated";
+            }
+            return View();
+        }
+        
         [HttpPost]
         public IActionResult UpdatePassword(int UserID, string Password, string ConfirmPassword)
         {
@@ -101,87 +186,24 @@ namespace Hospital_Management.Controllers
             return RedirectToAction("Profile");
         }
 
-        [HttpPost]
-        [Route("/Admin/Forgetpassword")]
-        public IActionResult Forgetpassword(string Email)
+        [Route("/Admin/VerifyOTP")]
+        public JsonResult VerifyOTP([FromBody] int userEnterOTP)
         {
-            var IsGamilValid = adminServices.
-
-            if (IsGamilValid.Email != Email)
-            {
-                TempData["ValidGmail"] = "This Email Is Not Registerd";
-                return View("AdminProfile", IsGamilValid);
-            }
-            else
-            {
-                // Generate OTP
-                int OTP = new Random().Next(100000, 999999);
-                HttpContext.Session.SetInt32("AdminOTP", OTP);
-                HttpContext.Session.SetString("OTPTime", DateTime.Now.AddMinutes(1).ToString());
-                HttpContext.Session.SetString("ForgetPasswordProgress", "True");
-                string Subject_of_ForgetEmail = "Your Admin Account OTP for Password Reset"; ;
-                string body = $@"
-                        <h2>Password Reset Request</h2>
-                        <p>Dear Admin,</p>
-                        <p>We received a request to reset the password for your admin account.</p>
-                        <p><strong>Your OTP is: <span style='color:blue; font-size:18px;'>{OTP}</span></strong></p>
-                        <p>Please enter this OTP on the verification screen to proceed.</p>
-                        <p>If you did not request this, please ignore this email.</p>
-                        <p>This OTP valid Until {DateTime.Now.AddMinutes(1)}</p>
-                        <br/>
-                        <p>Thanks,<br/>Hospital Management Team</p>
-                    ";
-                // send into Email
-                emailservices.SendEmailAsync(IsGamilValid.Email, Subject_of_ForgetEmail, body);
-                return View();
-            }
-
-        }
-
-        [HttpGet]
-        [Route("/Admin/ResetPassword")]
-        public IActionResult ResetPassword()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult ResetPassword(string Password)
-        {
-
-            int? userID = HttpContext.Session.GetInt32("UserID");
-            bool result = adminServices.UpdatePasswordfAdmin(userID.Value, Password, null, true);
-            if (result)
-            {
-                return RedirectToAction("Profile", "Admin");
-            }
-            else
-            {
-                TempData["UpdatePasswordMessage"] = "Your Password Not be Updated";
-            }
-            return View();
-        }
-
-        [Route("/Admin/VerifyOTP/{_otp}")]
-        public JsonResult VerifyOTP(int _otp = 12)
-        {
-            int _EnterdOTP = _otp;
+            int _EnterdOTP = userEnterOTP;
             int AdminOTP = HttpContext.Session.GetInt32("AdminOTP") ?? 0;
-            var expiryTime = HttpContext.Session.GetString("OTPTime");
 
-            DateTime et = DateTime.Parse(expiryTime);
-
-            if (AdminOTP == AdminOTP && et > DateTime.Now)
+            if (AdminOTP == _EnterdOTP)
             {
                 return Json(new
                 {
-                    success = true
+                    _VerifyOTP = true
                 });
             }
             else
             {
                 return Json(new
                 {
-                    success = false
+                    _VerifyOTP = false
                 });
             }
         }

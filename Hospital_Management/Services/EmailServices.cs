@@ -11,7 +11,7 @@ namespace Hospital_Management.Services
         {
             _config = configuration;
         }
-        public void SendEmailAsync(string toEmail, string subject, string body)
+        public bool SendEmail(string toEmail, string subject, string body)
         {
             var fromEmail = _config["EmailSettings:FromEmail"];
             var fromPassword = _config["EmailSettings:password"];
@@ -32,7 +32,15 @@ namespace Hospital_Management.Services
             };
             mailMessage.To.Add(toEmail);
 
-            smtpClient.SendMailAsync(mailMessage);
-        }
+            try
+            {
+                smtpClient.SendMailAsync(mailMessage);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        } 
     }
 }

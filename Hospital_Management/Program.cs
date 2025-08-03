@@ -1,3 +1,4 @@
+using Hospital_Management.CommonMethod_Class;
 using Hospital_Management.CustomMiddleware;
 using Hospital_Management.Data;
 using Hospital_Management.Interfaces;
@@ -11,26 +12,28 @@ namespace Hospital_Management
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
+            
             builder.Services.AddControllersWithViews();
-
-            builder.Services.AddDbContext<HospitalDbContext>(options =>
-           options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddDbContext<HospitalDbContext>(options =>          
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<IDepartmentService, DepartmentServices>();
             builder.Services.AddScoped<IAdminService, AdminServices>();
             builder.Services.AddScoped<IDoctorServices, DoctorService>();
             builder.Services.AddScoped<IEmailservices, EmailServices>();
-
+            builder.Services.AddScoped<IDoctorDepartment, DoctorDepartmentServices>();
+            
             var app = builder.Build();
-
+            
+            SessionUtility.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 
             if (app.Environment.IsDevelopment())
             {
