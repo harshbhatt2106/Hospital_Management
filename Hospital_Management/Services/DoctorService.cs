@@ -1,11 +1,6 @@
-﻿using Hospital_Management.Data;
-using Hospital_Management.Interfaces;
-using Hospital_Management.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Hospital_Management.Services
+﻿namespace Hospital_Management.Services
 {
-    public class DoctorService : IDoctorServices
+    public class DoctorService : IDoctorService
     {
         private readonly HospitalDbContext _hospitalDbContext;
         public DoctorService(HospitalDbContext _hospitalDbContext)
@@ -47,12 +42,7 @@ namespace Hospital_Management.Services
             _hospitalDbContext.RemoveRange(doctordID);
             _hospitalDbContext.SaveChanges();
         }
-       
-        public Doctor GetDoctorById(int doctorId)
-        {
-            throw new NotImplementedException();
-        }
-
+          
         public string isDoctorExits(string doctorName, string phone)
         {
             bool isDoctoravailabe = _hospitalDbContext.Doctors.Any(x => x.Name.ToLower() == doctorName.ToLower());
@@ -104,7 +94,11 @@ namespace Hospital_Management.Services
                .ToList();
 
             return doctor;
+        }
 
+        public Doctor GetDoctorById(int doctorId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,13 +1,9 @@
-﻿using Hospital_Management.Data;
-using Hospital_Management.Interfaces;
-using Hospital_Management.Models;
-
-namespace Hospital_Management.Services
+﻿namespace Hospital_Management.Services
 {
-    public class DoctorDepartmentServices : IDoctorDepartment
+    public class DoctorDepartmentService : IDoctorDepartment
     {
         private readonly HospitalDbContext hospitalDbContext;
-        public DoctorDepartmentServices(HospitalDbContext hospitalDbContext)
+        public DoctorDepartmentService(HospitalDbContext hospitalDbContext)
         {
             this.hospitalDbContext = hospitalDbContext;
         }

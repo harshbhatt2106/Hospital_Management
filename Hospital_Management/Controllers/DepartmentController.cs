@@ -29,8 +29,8 @@ namespace Hospital_Management.Controllers
         [Route("/Department/AddDepartment")]
         public IActionResult AddDepartment(Department department)
         {
-            int? _userid = HttpContext.Session.GetInt32("UserID");
-            department.UserId = _userid ?? 1;
+            int? _userid = SessionUtility.GetCurrentUserID();
+                department.UserId = _userid ?? 1;
 
             TempData["Message"] = null;
             if (_service.CheckDepartment(department.DepartmentName ?? " "))

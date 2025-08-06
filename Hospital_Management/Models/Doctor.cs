@@ -10,20 +10,23 @@ namespace Hospital_Management.Models
             DoctorDepartments = new HashSet<DoctorDepartment>();
         }
         public int DoctorId { get; set; }
+
+        [Required(ErrorMessage = "Enter Name")]
         public string Name { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Enter Phone number")]
         [Phone]
         [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Phone Number must be exactly 10 digits and contain only numbers.")]
         public string Phone { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Enter Email Address")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Enter Qualification")]
         public string Qualification { get; set; } = null!;
-        [Required]
+
+        [Required(ErrorMessage = "Enter Specialization")]
         public string Specialization { get; set; } = null!;
         public bool? IsActive { get; set; }
         public DateTime? Created { get; set; }

@@ -1,17 +1,16 @@
-﻿using Hospital_Management.Interfaces;
-using Hospital_Management.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿
 
 namespace Hospital_Management.Controllers
 {
     public class DoctorController : Controller
     {
-        private readonly IDoctorServices _doctorService;
+        private readonly IDoctorService _doctorService;
         private readonly IDepartmentService _departementServices;
         private readonly IDoctorDepartment doctorDepartment;
 
-        public DoctorController(IDoctorServices doctorService,IDepartmentService departmentService,IDoctorDepartment doctorDepartment)
+        public DoctorController(IDoctorService doctorService,
+                                IDepartmentService departmentService,
+                                IDoctorDepartment doctorDepartment)
         {
             this.doctorDepartment = doctorDepartment;   
             _departementServices = departmentService;
@@ -25,7 +24,10 @@ namespace Hospital_Management.Controllers
 
         public IActionResult AddDoctor()
         {
+            // list departments
             var Departments = _departementServices.departments().ToList();
+            
+
             var DepartmentDDL = new AddDoctorViewModel()
             {
                 Departments = Departments.Select(d => new SelectListItem
@@ -43,7 +45,7 @@ namespace Hospital_Management.Controllers
         public IActionResult AddDoctor(AddDoctorViewModel addDoctorViewModel)
         {
 
-            int? _userid = HttpContext.Session.GetInt32("UserID");
+            int? _userid = SessionUtility.GetCurrentUserID();
 
             var Doctors = new Doctor()
             {
@@ -60,12 +62,13 @@ namespace Hospital_Management.Controllers
             bool isAdded = _doctorService.AddDoctorWithDepartment(Doctors, addDoctorViewModel.SelectedDepartmentId, _userid ?? 1);
             if (isAdded)
             {
-                TempData["DoctorAddMessgae"] = "doctor Added SuccessFully";
+                TempData["DoctorAddMessgae"] = "Doctor Added SuccessFully";
             }
             else
             {
-                TempData["DoctorAddMessgae"] = "Doctor add failed";
+                TempData["DoctorAddMessgae"] = "Doctor Added Failed";
                 var Departments = _departementServices.departments().ToList();
+                
 
                 var DepartmentDDL = new AddDoctorViewModel()
                 {
@@ -75,8 +78,9 @@ namespace Hospital_Management.Controllers
                         Value = d.DepartmentId.ToString()
                     }).ToList()
                 };
+                return View("AddDoctor");
             }
-            return View("DoctorDashboard");
+            return RedirectToAction("ShowDoctors");
         }
 
 
@@ -93,11 +97,12 @@ namespace Hospital_Management.Controllers
             //Load All SeletedDepartment From DD table
             addDoctorViewModel.SelectedDepartmentId = doctorDepartment.DepartmentIds(doctorID);
 
-            // get all department
+            // Get All Department
             var DepartmentList = _departementServices.departments().ToList();
 
             foreach (var item in DepartmentList)
             {
+                // Check Already Selected DepartmentID
                 if (addDoctorViewModel.SelectedDepartmentId.Contains(item.DepartmentId))
                 {
                     addDoctorViewModel.Departments.Add(new SelectListItem
@@ -136,8 +141,9 @@ namespace Hospital_Management.Controllers
         [HttpPost]
         public IActionResult Update(AddDoctorViewModel addDoctorViewModel)
         {
-            int? _userid = HttpContext.Session.GetInt32("UserID");
+            int? _userid = SessionUtility.GetAdminID();
 
+            // Fill Doctor Updated Data
             var Doctors = new Doctor()
             {
                 Name = addDoctorViewModel.Name,
@@ -162,7 +168,7 @@ namespace Hospital_Management.Controllers
             {
                 TempData["DoctorAddMessgae"] = "Doctor add failed";
              
-                // get department From database 
+                // Get All  DepartmentAgain If Doctor Add Faild
                 var Departments = _departementServices.departments().ToList();
 
                 var DepartmentDDL = new AddDoctorViewModel()

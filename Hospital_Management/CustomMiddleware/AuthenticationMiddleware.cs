@@ -1,4 +1,6 @@
-﻿namespace Hospital_Management.CustomMiddleware
+﻿using Hospital_Management.CommonMethod_Class;
+
+namespace Hospital_Management.CustomMiddleware
 {
     public class AuthenticationMiddleware
     {
@@ -30,8 +32,8 @@
 
             else
             {
-                int? _userid = context.Session.GetInt32("UserID");
-                if (_userid == null)
+                int? _userid = SessionUtility.GetAdminID();
+                if (_userid == 0)
                 {
                     context.Response.Redirect("/Admin/Login");
                     return;

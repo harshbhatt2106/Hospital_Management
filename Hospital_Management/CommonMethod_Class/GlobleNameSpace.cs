@@ -1,6 +1,10 @@
-﻿namespace Hospital_Management.CommonMethod_Class
-{
-    public class GlobleNameSpace
-    {
-    }
-}
+﻿global using Hospital_Management.Models;
+global using Hospital_Management.CommonMethod;
+global using Hospital_Management.CommonMethod_Class;
+global using Hospital_Management.Interfaces;
+global using Microsoft.AspNetCore.Mvc;
+global using Hospital_Management.Data;
+global using System.Reflection.Metadata.Ecma335;
+global using Microsoft.AspNetCore.Mvc.Rendering;
+global using Microsoft.EntityFrameworkCore;
+global using Hospital_Management.Services;

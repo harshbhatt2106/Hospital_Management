@@ -25,11 +25,14 @@ namespace Hospital_Management
             builder.Services.AddDbContext<HospitalDbContext>(options =>          
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddScoped<IDepartmentService, DepartmentServices>();
-            builder.Services.AddScoped<IAdminService, AdminServices>();
-            builder.Services.AddScoped<IDoctorServices, DoctorService>();
-            builder.Services.AddScoped<IEmailservices, EmailServices>();
-            builder.Services.AddScoped<IDoctorDepartment, DoctorDepartmentServices>();
+            // Inject All Dependency
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IDoctorService, DoctorService>();
+            builder.Services.AddScoped<IEmailservice, EmailServices>();
+            builder.Services.AddScoped<IDoctorDepartment, DoctorDepartmentService>();
+            builder.Services.AddScoped<IPasswordService,PasswordServices>();
+            builder.Services.AddScoped<IotpService,OTPServices>();
             
             var app = builder.Build();
             

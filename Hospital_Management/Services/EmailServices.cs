@@ -4,7 +4,7 @@ using System.Net.Mail;
 
 namespace Hospital_Management.Services
 {
-    public class EmailServices:IEmailservices
+    public class EmailServices:IEmailservice
     {
         private readonly IConfiguration _config;
         public EmailServices(IConfiguration configuration)

@@ -2,7 +2,7 @@
 
 namespace Hospital_Management.Interfaces
 {
-    public interface IDoctorServices
+    public interface IDoctorService
     {
         Doctor GetDoctorById(int doctorId);
         bool AddDoctorWithDepartment(Doctor doctor, List<int> selectedDepartmentID, int userID);

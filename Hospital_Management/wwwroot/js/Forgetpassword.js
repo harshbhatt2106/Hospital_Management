@@ -16,9 +16,8 @@ sendOtpBtn.addEventListener('click', function ()
         errorMsg.innerText = "📧 Please enter your email.";
         return;
     }
-    sendOtpBtn.disabled = true;
 
-    loading.classList.remove = 'd-none';
+    loading.classList.remove('hidden');// Show loader for user 
 
     // ajax call for ConformatiomEmail
     fetch("/Admin/VerifyGmail",
@@ -32,14 +31,15 @@ sendOtpBtn.addEventListener('click', function ()
         })
         .then(res => res.json())
         .then(result =>
-        {
-            if (result.success)
-            {
+        {   
 
+            if (result.success)// verification Gmail Resule
+            {
+                loading.classList.add('hidden');// show loader
                 gmailSection.classList.add('hidden');
                 otpSection.classList.remove('hidden');
-                // ajax call to Send OTP
-                fetch("/Admin/SendOTP",
+
+                fetch("/Admin/SendOTP", // ajax call to Send OTP
                     {
                         method: "POST",
                         headers:
@@ -53,8 +53,7 @@ sendOtpBtn.addEventListener('click', function ()
                     {
                         if (data.success)
                         {
-                            // loding page close
-                            loading.classList.add = 'd-none'; 
+                            loading.classList.add('hidden');// close Loader
                             errorMsg.innerText = "OTP Send SuccessFully";
                             sendOtpBtn.disabled = true;
                         }
@@ -67,13 +66,17 @@ sendOtpBtn.addEventListener('click', function ()
             }
             else
             {
-                errorMsg.innerText = `${data}This GmailID is Not Register`;
+                setTimeout(() =>
+                {
+                    loading.classList.add('hidden');// close Loader
+                    errorMsg.innerText = `${data}:This GmailID is Not Register`;
+                },1000)
             }
         })
         .catch(() =>
         {
             // loding page close
-            loading.classList.add = 'd-none'; 
+            loading.classList.add('hidden');
             errorMsg.innerText = "Network error. Please try again.";
             sendOtpBtn.disabled = false;
         })
@@ -97,7 +100,8 @@ verifyOtpBtn.addEventListener('click', function () {
         })
         .then(res => res.json())
         .then(data => {
-            if (data._VerifyOTP) {
+            if (data._VerifyOTP)
+            {
                 // otp success
                 errorMsg.style.color = '#00FF00';
                 errorMsg.innerText = "OTO Verify SuccessFully.....";

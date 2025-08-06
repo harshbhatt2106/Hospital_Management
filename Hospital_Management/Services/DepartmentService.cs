@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 namespace Hospital_Management.Services
 {
 
-    public class DepartmentServices : IDepartmentService
+    public class DepartmentService : IDepartmentService
     {
         private List<Department> _departments = new();
 

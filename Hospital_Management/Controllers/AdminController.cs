@@ -1,26 +1,27 @@
-﻿using Hospital_Management.CommonMethod;
-using Hospital_Management.Interfaces;
-using Hospital_Management.Models;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Hospital_Management.Controllers
+﻿namespace Hospital_Management.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IAdminService adminServices;
-        private readonly IDoctorServices doctorServices;
+        private readonly IDoctorService doctorServices;
         private readonly IDepartmentService departmentServices;
-        private readonly IEmailservices emailservices;
+        private readonly IEmailservice emailservices;
+        private readonly IPasswordService passwordServices;
+        private readonly IotpService otpServices;
 
         public AdminController(IAdminService _adminServices,
-                               IDoctorServices doctorServices,
+                               IDoctorService doctorServices,
                                IDepartmentService departmentServices,
-                               IEmailservices emailservices)
+                               IEmailservice emailservices,
+                               IPasswordService passwordServices,
+                               IotpService otpServices)
         {
             this.adminServices = _adminServices;
             this.doctorServices = doctorServices;
             this.departmentServices = departmentServices;
             this.emailservices = emailservices;
+            this.passwordServices = passwordServices;
+            this.otpServices = otpServices;
         }
         public IActionResult Index()
         {
@@ -30,7 +31,7 @@ namespace Hospital_Management.Controllers
         [Route("/Admin/AdminProfile")]
         public IActionResult Profile()
         {
-            int? adminID = HttpContext.Session.GetInt32("UserID");
+            int? adminID = SessionUtility.GetCurrentUserID();
             User? usersByID = null;
             if (adminID != null)
             {
@@ -48,7 +49,7 @@ namespace Hospital_Management.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetInt32("UserID") != null)
+            if (SessionUtility.GetAdminID() > 0)
             {
                 return View("AdminDashboard");
             }
@@ -63,14 +64,12 @@ namespace Hospital_Management.Controllers
         [Route("Admin/Login")]
         public IActionResult Login(string UserName, string Password)
         {
-            //throw new Exception("Just for try");
             try
             {
                 User admin = Helper_Method.CheckLogin(Password, UserName);
                 if (admin != null)
                 {
                     HttpContext.Session.SetInt32("UserID", admin.UserID);
-                    //emailservices.SendEmailAsync("24030501004@darshan.ac.in", "Login", "Login");
                     return RedirectToAction("AdminDashboard", "Admin");
                 }
                 else
@@ -86,7 +85,7 @@ namespace Hospital_Management.Controllers
         }
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
+            SessionUtility.ClearUserSession();
             return RedirectToAction("Login");
         }
 
@@ -104,37 +103,21 @@ namespace Hospital_Management.Controllers
             adminServices.AddAdmin(user);
             return View();
         }
-    
+
         [HttpGet]
         public IActionResult Forgetpassword()
         {
             return View();
         }
 
+
+
         [Route("/Admin/SendOTP")]
         [HttpPost]
         public JsonResult SendOTP([FromBody] string Email)
         {
-
-            // Generate OTP
-            int OTP = new Random().Next(100000, 999999);
-            HttpContext.Session.SetInt32("AdminOTP", OTP);
-            HttpContext.Session.SetString("ForgetPasswordProgress", "True");
-            string Subject_of_ForgetEmail = "Your Admin Account OTP for Password Reset"; ;
-            string body = $@"
-                        <h2>Password Reset Request</h2>
-                        <p>Dear Admin,</p>
-                        <p>We received a request to reset the password for your admin account.</p>
-                        <p><strong>Your OTP is: <span style='color:blue; font-size:18px;'>{OTP}</span></strong></p>
-                        <p>Please enter this OTP on the verification screen to proceed.</p>
-                        <p>If you did not request this, please ignore this email.</p>
-                        <p>This OTP valid 1 Time </p> 
-                        <br/>
-                        <p>Thanks,<br/>Hospital Management Team</p>
-                    ";
-
             // send into Email
-            bool IsMailSendSuccess = emailservices.SendEmail(Email, Subject_of_ForgetEmail, body);
+            bool IsMailSendSuccess = otpServices.SendOTP(Email);
             return Json(new { success = IsMailSendSuccess });
         }
 
@@ -144,7 +127,7 @@ namespace Hospital_Management.Controllers
         public JsonResult VerifyGmail([FromBody] string Email)
         {
             bool IsGamilValid = adminServices.GetAdmins().Any(x => x.Email.ToLower() == Email.ToLower());
-            ViewBag.Email = Email;
+            TempData["Gmail"] = Email;
             return Json(new { success = IsGamilValid });
         }
 
@@ -159,8 +142,9 @@ namespace Hospital_Management.Controllers
         [HttpPost]
         public IActionResult ResetPassword(string Password)
         {
-            int? userID = HttpContext.Session.GetInt32("UserID");
-            bool result = adminServices.UpdateUserForgetPassword(ViewBag.Email, Password);
+            int? userID = SessionUtility.GetAdminID();
+            string gmail = TempData["Gmail"].ToString();
+            bool result = passwordServices.UpdateUserForgetPassword(gmail, Password);
             if (result)
             {
                 return RedirectToAction("Login", "Admin");
@@ -171,11 +155,11 @@ namespace Hospital_Management.Controllers
             }
             return View();
         }
-        
+
         [HttpPost]
-        public IActionResult UpdatePassword(int UserID, string Password, string ConfirmPassword)
+        public IActionResult UpdatePassword(int UserID, string Password, string ConfirmPassword, string EnterdOldPassword)
         {
-            bool Istrue = adminServices.UpdatePasswordfAdmin(UserID, ConfirmPassword, Password);
+            bool Istrue = passwordServices.UpdatePasswordfAdmin(UserID, ConfirmPassword, Password, EnterdOldPassword);
             if (!Istrue)
             {
                 TempData["UpdatepasswordMessage"] = "Old Password is Wrong";
@@ -189,10 +173,9 @@ namespace Hospital_Management.Controllers
         [Route("/Admin/VerifyOTP")]
         public JsonResult VerifyOTP([FromBody] int userEnterOTP)
         {
-            int _EnterdOTP = userEnterOTP;
-            int AdminOTP = HttpContext.Session.GetInt32("AdminOTP") ?? 0;
+            int generatedOTPBySystem = SessionUtility.GetOPT();
 
-            if (AdminOTP == _EnterdOTP)
+            if (otpServices.VerifyOTP(generatedOTPBySystem, userEnterOTP))
             {
                 return Json(new
                 {
@@ -205,6 +188,26 @@ namespace Hospital_Management.Controllers
                 {
                     _VerifyOTP = false
                 });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult UpdateAdmin(int id)
+        {
+            var ExistingData = adminServices.GetAdminByID(id);
+            return View(ExistingData);
+        }
+        [HttpPost]
+        public IActionResult UpdateAdmin(User user, int id)
+        {
+            int result = adminServices.UpdateAdmin(user, id);
+            if (result > 0)
+            {
+                return RedirectToAction("AdminProfile", "Admin");
+            }
+            else
+            {
+                return Ok("data not Updated");   
             }
         }
     }

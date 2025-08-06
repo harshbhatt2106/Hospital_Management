@@ -28,15 +28,26 @@ public class ErrorController : Controller
     public IActionResult InvalidURL(int statusCode)
     {
         var result = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+
         switch (statusCode)
         {
             case 404:
-                ViewBag.ErrorMessage = $"You are Finding {result.OriginalPath} its not path of our system";
-                logger.LogWarning($"404 path is {result.OriginalPath} query string {result.OriginalQueryString}");
+                if (result != null)
+                {
+                    ViewBag.ErrorMessage = $"You are Finding {result.OriginalPath} its not path of our system";
+                    logger.LogWarning($"404 path is {result.OriginalPath} query string {result.OriginalQueryString}");
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "The path you're looking for does not exist.";
+                    logger.LogWarning("404 occurred but IStatusCodeReExecuteFeature was null.");
+                }
                 break;
+
         }
 
         return View("InvalidURL");
     }
+
 
 }

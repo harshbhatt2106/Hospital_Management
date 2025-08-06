@@ -1,6 +1,6 @@
 ﻿namespace Hospital_Management.Interfaces
 {
-    public interface IEmailservices
+    public interface IEmailservice
     {
         bool SendEmail(string toEmail, string subject, string body);
     }

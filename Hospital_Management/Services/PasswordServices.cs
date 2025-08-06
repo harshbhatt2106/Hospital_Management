@@ -1,71 +1,25 @@
 ﻿using Hospital_Management.Data;
 using Hospital_Management.Interfaces;
-using Hospital_Management.Models;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Hospital_Management.Services
 {
-    public class AdminServices : IAdminService
+    public class PasswordServices : IPasswordService
     {
         private readonly HospitalDbContext _context;
-        public AdminServices(HospitalDbContext hospitalDbContext)
+        public PasswordServices(HospitalDbContext hospitalDbContext)
         {
-            _context = hospitalDbContext;
+            _context = hospitalDbContext;      
         }
 
-        public bool AddAdmin(User admin)
+        public bool UpdatePasswordfAdmin(int id, string newpassword, string password, string EnterdOldPassword)
         {
-            admin.Created = DateTime.Now;
-            _context.Users.Add(admin);
-            if (_context.SaveChanges() > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public int adminCount()
-        {
-            return _context.Users.Count();
-        }
-        public bool AdminEmailValid(string userData)
-        {
-            bool a = _context.Users.Any(u => u.Email == userData);
-            return a;
-        }
-        public User GetAdminByID(int adminID)
-        {
-            User admin = _context.Users.Find(adminID);
-
-            if (admin != null)
-            {
-                return admin;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public List<User> GetAdmins()
-        {
-            List<User> users = _context.Users.ToList();
-            return users;
-        }
-
-        public bool UpdatePasswordfAdmin(int id, string newpassword, string password)
-        {
-
             // get old password
             var oldpassword = _context.Users
                              .Where(x => x.UserID == id)
                              .Select(x => x.Password)
                              .FirstOrDefault();
 
-            if (password != oldpassword)
+            if (EnterdOldPassword != oldpassword)
             {
                 return false;
             }
@@ -83,6 +37,7 @@ namespace Hospital_Management.Services
             {
                 throw;
             }
+
         }
 
         public bool UpdateUserForgetPassword(string Gmail, string password)
@@ -98,6 +53,8 @@ namespace Hospital_Management.Services
             {
                 throw;
             }
+
         }
+        
     }
 }

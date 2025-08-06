@@ -8,19 +8,20 @@ namespace Hospital_Management.CommonMethod_Class
         {
             _contextAccessor = accessor;
         }
-        public static int GetAdminID()
+        public static int GetCurrentUserID()
         {
-            int userID = (int)_contextAccessor.HttpContext.Session.GetInt32("AdminID");
-            return userID;
+            int? userID = _contextAccessor?.HttpContext?.Session.GetInt32("UserID");
+            return userID ?? 0;
         }
         public static int GetOPT()
         {
-            return 0;
+            int? otp = _contextAccessor.HttpContext.Session.GetInt32("AdminOTP");
+            return otp ?? 0;
         }
-      
+
         public static void ClearUserSession()
         {
-            _contextAccessor.HttpContext.Session.Remove("AdminID");
+            _contextAccessor.HttpContext.Session.Remove("UserID");
         }
     }
 }
