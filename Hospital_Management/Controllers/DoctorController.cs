@@ -12,7 +12,7 @@ namespace Hospital_Management.Controllers
                                 IDepartmentService departmentService,
                                 IDoctorDepartment doctorDepartment)
         {
-            this.doctorDepartment = doctorDepartment;   
+            this.doctorDepartment = doctorDepartment;
             _departementServices = departmentService;
             _doctorService = doctorService;
         }
@@ -26,7 +26,7 @@ namespace Hospital_Management.Controllers
         {
             // list departments
             var Departments = _departementServices.departments().ToList();
-            
+
 
             var DepartmentDDL = new AddDoctorViewModel()
             {
@@ -68,7 +68,6 @@ namespace Hospital_Management.Controllers
             {
                 TempData["DoctorAddMessgae"] = "Doctor Added Failed";
                 var Departments = _departementServices.departments().ToList();
-                
 
                 var DepartmentDDL = new AddDoctorViewModel()
                 {
@@ -141,7 +140,7 @@ namespace Hospital_Management.Controllers
         [HttpPost]
         public IActionResult Update(AddDoctorViewModel addDoctorViewModel)
         {
-            int? _userid = SessionUtility.GetAdminID();
+            int? _userid = SessionUtility.GetCurrentUserID();
 
             // Fill Doctor Updated Data
             var Doctors = new Doctor()
@@ -167,7 +166,7 @@ namespace Hospital_Management.Controllers
             else
             {
                 TempData["DoctorAddMessgae"] = "Doctor add failed";
-             
+
                 // Get All  DepartmentAgain If Doctor Add Faild
                 var Departments = _departementServices.departments().ToList();
 
@@ -191,12 +190,12 @@ namespace Hospital_Management.Controllers
             return RedirectToAction("ShowDoctors");
         }
 
-        [HttpGet]
-        [Route("/Doctor/isDoctorExitsOrNot/{doctorName}/{Phone}")]
-        public IActionResult IsDoctorNameExists(string doctorName, string Phone)
+        [HttpPost]
+        [Route("/Doctor/isDoctorExitsOrNot")]
+        public JsonResult IsDoctorNameExists([FromBody] Dictionary<string,string> keyValuePairs)
         {
-            string isDoctore = _doctorService.isDoctorExits(doctorName, Phone);
-            return Ok(new { messgae = isDoctore });
+            var (EmailExits, PhoneExits) = _doctorService.isDoctorExits(keyValuePairs["GmailID"], keyValuePairs["Phone"]);
+            return Json(new { emailExists = EmailExits, phoneExists = PhoneExits });
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Hospital_Management.CommonMethod_Class;
-
-namespace Hospital_Management.CustomMiddleware
+﻿namespace Hospital_Management.CustomMiddleware
 {
     public class AuthenticationMiddleware
     {
@@ -10,29 +8,34 @@ namespace Hospital_Management.CustomMiddleware
         {
             _requestDelegate = requestDelegate;
         }
+
         public async Task InvokeAsync(HttpContext context)
         {
             string[] publicPaths =
                 {
                     "/admin/login",
-                    "/admin/forgetpassword",
+                    "/password/forgetpassword",
                     "/admin/verifygmail",
                     "/admin/sendotp",
                     "/admin/verifyotp",
-                    "/admin/ResetPassword"
+                    "/password/ResetPassword"
                 };
 
             string path = context.Request.Path.Value?.ToLowerInvariant() ?? "/admin/login";
 
-            if (publicPaths.Any(p => path.Equals(p,StringComparison.OrdinalIgnoreCase)))
+            if (publicPaths.Any(p => path.Equals(p, StringComparison.OrdinalIgnoreCase)))
             {
                 await _requestDelegate(context);
                 return;
             }
-
+            if (path == "/error/general")
+            {
+                await _requestDelegate(context);
+                return;
+            }
             else
             {
-                int? _userid = SessionUtility.GetAdminID();
+                int? _userid = SessionUtility.GetCurrentUserID();
                 if (_userid == 0)
                 {
                     context.Response.Redirect("/Admin/Login");

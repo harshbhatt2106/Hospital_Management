@@ -8,8 +8,6 @@ namespace Hospital_Management.CommonMethod_Class
 
         private static string ConnectionString = "Data Source=DESKTOP-LCMNUM6\\SQLEXPRESS;Initial Catalog=Hospital_Management;Integrated Security=True;Encrypt=False";
 
-
-
         public static SqlDataReader ExecuteProceduteReader(this SqlCommand sqlCommand, string ProcedureName, SqlParameter[]? parameters = null)
         {
             SqlConnection sqlConnection = new SqlConnection(ConnectionString);

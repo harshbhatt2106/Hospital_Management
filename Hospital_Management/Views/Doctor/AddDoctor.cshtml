@@ -15,21 +15,20 @@
                     <div class="col-md-6">
                         <label asp-for="Name" class="form-label fw-semibold"></label>
                         <input asp-for="Name" id="DoctorName" class="form-control" placeholder="Enter doctor name" />
-                        <span asp-validation-for="Name" id="nameValidationError" class="text-danger small"></span>
+                        <span asp-validation-for="Name"  class="text-danger small"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="Phone" class="form-label fw-semibold"></label>
                         <input asp-for="Phone" id="Phone" type="text" class="form-control" placeholder="Enter phone number" />
-                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                        <span asp-validation-for="Phone" id="phoneError"  class="text-danger small"></span>
                     </div>
                 </div>
-
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label asp-for="Email" class="form-label fw-semibold"></label>
                         <input asp-for="Email" id="Email" class="form-control" placeholder="Enter email" />
-                        <span asp-validation-for="Email" class="text-danger small"></span>
+                        <span asp-validation-for="Email" id="emailError" class="text-danger small"></span>
                     </div>
 
                     <div class="col-md-6">
@@ -55,7 +54,7 @@
                                                        name="SelectedDepartmentId"
                                                        value="@dept.Value"
                                                        id="dept_@dept.Value"
-                                                       required/>
+                                                       required />
                                                 <label class="form-check-label" for="dept_@dept.Value">
                                                     @dept.Text
                                                 </label>
@@ -92,49 +91,9 @@
                     </>
             </form>
         </div>
+        <p id="error"></p>
     </div>
-    <script>
-
-        const doctorName = document.getElementById('DoctorName');
-        const Email = document.getElementById('Email');
-        const phone = document.getElementById('Phone');
-        const error = document.getElementById('nameValidationError');
-        const doctorAddbtn = document.getElementById('addDoctor');
-        const feild = [Email,phone,doctorName];
-
-        feild.forEach((f)=>
-        {
-            f.addEventListener('blur',()=>
-            {
-                const Dname = doctorName.value;
-                const DPhone = phone.value;
-                if(Dname && DPhone)
-                {
-                        fetch(`/Doctor/isDoctorExitsOrNot/${encodeURIComponent(Dname)}/${encodeURIComponent(DPhone)}`)
-                        .then(res=>res.json())
-                        .then(val=>{
-                            const msg = val.messgae;
-                            if (msg === "DNAME")
-                            {
-                                error.textContent = "Doctor name already exists";
-                                doctorAddbtn.disabled = true;
-                            }
-                            else if (msg === "DPHONE")
-                            {
-                                error.textContent = "Phone number already exists";
-                                doctorAddbtn.disabled = true;
-                            }
-                            else
-                            {
-                                error.textContent = " ";
-                                doctorAddbtn.disabled = false;
-                            }
-                        })
-                }// for endd
-            })// end event listen
-        })
-
-    </script>
+    <script type="text/javascript" asp-append-version="true" src="~/js/adddoctor.js"></script>
     @section Scripts
     {
         @{

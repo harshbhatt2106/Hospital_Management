@@ -15,13 +15,13 @@ namespace Hospital_Management.CommonMethod_Class
         }
         public static int GetOPT()
         {
-            int? otp = _contextAccessor.HttpContext.Session.GetInt32("AdminOTP");
+            int? otp = _contextAccessor?.HttpContext?.Session.GetInt32("AdminOTP");
             return otp ?? 0;
         }
 
         public static void ClearUserSession()
         {
-            _contextAccessor.HttpContext.Session.Remove("UserID");
+            _contextAccessor?.HttpContext?.Session.Remove("UserID");
         }
     }
 }

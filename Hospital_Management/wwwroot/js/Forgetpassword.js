@@ -1,120 +1,116 @@
-﻿const gmailSection = document.getElementById('gmailSection');
+﻿import { VeryfiOTP } from './AllReletedOTP.js';
+import { SendOTP } from './AllReletedOTP.js';
+import { VerificationGmail } from './AllReletedOTP.js';
+
+const gmailSection = document.getElementById('gmailSection');
 const otpSection = document.getElementById('otpSection');
 const sendOtpBtn = document.getElementById('sendOtpBtn');
+const resendOtpBtn = document.getElementById('resendOtpBtn');
 const verifyOtpBtn = document.getElementById('verifyOtpBtn');
 const errorMsg = document.getElementById('errorMsg');
 const gmail = document.getElementById('gmailInput');
 const otp = document.getElementById('otpInput')
 const loading = document.getElementById('loadingOverlay');
 
-sendOtpBtn.addEventListener('click', function ()
-{
-    const data = gmail.value.trim();
+sendOtpBtn.addEventListener('click', async function () {
 
-    if (data === "")
+    errorMsg.innerText = "";
+
+    try
     {
-        errorMsg.innerText = "📧 Please enter your email.";
-        return;
-    }
-
-    loading.classList.remove('hidden');// Show loader for user 
-
-    // ajax call for ConformatiomEmail
-    fetch("/Admin/VerifyGmail",
+        if (gmail.value == '')
         {
-            method: "POST",
-            headers:
-            {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(result =>
-        {   
+            errorMsg.innerText = "Enter GmailID"
+            return;
+        }
 
-            if (result.success)// verification Gmail Resule
+        loading.classList.remove('hidden');
+        const IsGmailDone = await VerificationGmail(gmail.value);
+
+        if (IsGmailDone)
+        {
+            // show OTP Page              
+            errorMsg.innerText = "";
+
+            // send otp
+            const result = await SendOTP(gmail.value);
+
+            if (result)
             {
-                loading.classList.add('hidden');// show loader
+                loading.classList.add('hidden');
                 gmailSection.classList.add('hidden');
                 otpSection.classList.remove('hidden');
-
-                fetch("/Admin/SendOTP", // ajax call to Send OTP
-                    {
-                        method: "POST",
-                        headers:
-                        {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(res => res.json())
-                    .then(data =>
-                    {
-                        if (data.success)
-                        {
-                            loading.classList.add('hidden');// close Loader
-                            errorMsg.innerText = "OTP Send SuccessFully";
-                            sendOtpBtn.disabled = true;
-                        }
-                        else
-                        {
-                            errorMsg.innerText = "OTP not Send try Again or Chech Your Internet";
-                            sendOtpBtn.disabled = false;
-                        }
-                    })
+                sendOtpBtn.disabled = true;
             }
             else
             {
-                setTimeout(() =>
-                {
-                    loading.classList.add('hidden');// close Loader
-                    errorMsg.innerText = `${data}:This GmailID is Not Register`;
-                },1000)
+                sendOtpBtn.disabled = false;
+                errorMsg.innerText = `otp has been not generated resend otp`;
             }
-        })
-        .catch(() =>
+        }
+        else
         {
-            // loding page close
             loading.classList.add('hidden');
-            errorMsg.innerText = "Network error. Please try again.";
-            sendOtpBtn.disabled = false;
-        })
+            errorMsg.innerText = `${gmail.value}:This GmailID is Not Register`;
+        }
+    }
+    catch
+    {
+        loading.classList.add('hidden');
+        errorMsg.innerText = "Network error. Please try again.";
+        sendOtpBtn.disabled = false;
+    }
+    finally
+    {
+        loading.classList.add('hidden');
+    }
 });
 
-verifyOtpBtn.addEventListener('click', function () {
+resendOtpBtn.addEventListener('click',async function ()
+{
+    const result = await SendOTP(gmail.value);
+
+    if (result)
+    {
+        loading.classList.add('hidden');
+        gmailSection.classList.add('hidden');
+        otpSection.classList.remove('hidden');
+        errorMsg.innerText = "OTP Resend in Your RegisterGmailID...";
+        sendOtpBtn.disabled = true;
+    }   
+    else
+    {
+        sendOtpBtn.disabled = false;
+        errorMsg.innerText = `Resend OTP has been Not Generated`;
+    }
+
+})
+
+verifyOtpBtn.addEventListener('click', async function ()
+{
+
     const _otp = otp.value.trim();
 
     if (_otp === "") {
         errorMsg.innerText = "🔐 Please enter the OTP.";
         return;
     }
-    // veryfy otp ajax call 
-    fetch("/Admin/VerifyOTP",
-        {
-            method: "Post",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(_otp)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data._VerifyOTP)
-            {
-                // otp success
-                errorMsg.style.color = '#00FF00';
-                errorMsg.innerText = "OTO Verify SuccessFully.....";
-                setTimeout(() => {
-                    window.location.href = '/Admin/ResetPassword'
-                }, 2000)
-            }
-            else {
-                // otp wrong
-                errorMsg.style.color = 'red';
-                errorMsg.innerText = "OTP is Wrong.....";
-            }
-        })
+
+    const ResultOfVerifyOTP = await VeryfiOTP(_otp);
+    if (ResultOfVerifyOTP._VerifyOTP)
+    {
+        // otp success
+        errorMsg.style.color = '#00FF00';
+        errorMsg.innerText = "OTP Verify SuccessFully.....";
+        setTimeout(() => {
+            window.location.href = '/Password/ResetPassword'
+        }, 2000)
+    }
+    else
+    {
+        errorMsg.style.color = 'red';
+        errorMsg.innerText = ResultOfVerifyOTP.reason
+    }
 
 });
 

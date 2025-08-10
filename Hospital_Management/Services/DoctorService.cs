@@ -42,21 +42,19 @@
             _hospitalDbContext.RemoveRange(doctordID);
             _hospitalDbContext.SaveChanges();
         }
-          
-        public string isDoctorExits(string doctorName, string phone)
-        {
-            bool isDoctoravailabe = _hospitalDbContext.Doctors.Any(x => x.Name.ToLower() == doctorName.ToLower());
 
-            bool isohone = _hospitalDbContext.Doctors.Any(x => x.Phone.ToLower() == phone.ToLower());
-            if (isDoctoravailabe)
+        public (bool EmailExits, bool PhoneExits) isDoctorExits(string gmail, string phone)
+        {
+            try
             {
-                return "DNAME";
+                bool IsgmailExits = !string.IsNullOrWhiteSpace(gmail) && _hospitalDbContext.Doctors.Any(x => x.Email.ToLower() == gmail.ToLower());
+                bool IsphoneExits = !string.IsNullOrWhiteSpace(phone) && _hospitalDbContext.Doctors.Any(x => x.Phone.ToLower() == phone.ToLower());
+                return (IsgmailExits, IsgmailExits);
             }
-            if (isohone)
+            catch
             {
-                return "DPHONE";
+                throw;
             }
-            return "Non";
         }
 
         public bool updateDoctorWithDepartment(Doctor doctor, List<int> selectedDepartmentID)

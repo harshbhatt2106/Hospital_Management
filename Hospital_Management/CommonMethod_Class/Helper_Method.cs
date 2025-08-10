@@ -4,8 +4,7 @@ using System.Data.SqlClient;
 namespace Hospital_Management.CommonMethod
 {
     public static class Helper_Method
-    {
-        public static List<Department> departmentsList = new List<Department>();
+    {        
         public static User? CheckLogin(string password, string name)
         {
             string procedure = "SP_Check_Login_Credentials";
@@ -26,5 +25,8 @@ namespace Hospital_Management.CommonMethod
                 return null;
             }
         }
+
+        
+        
     }
 }

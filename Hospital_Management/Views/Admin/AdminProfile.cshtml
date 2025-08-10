@@ -115,7 +115,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <span>Active Sessions: <strong class="text-gray-700">8</strong></span>
                 </li>
             </ul>
         </div>
@@ -209,7 +208,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@admin.Modified.ToString("dd MMM yyyy HH:mm tt")</td>
 
                             @{
-                                if (SessionUtility.GetAdminID() == admin.UserID)
+                                if (SessionUtility.GetCurrentUserID() == admin.UserID)
                                 {
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <a asp-action="UpdateAdmin"

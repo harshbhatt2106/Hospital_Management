@@ -1,2 +1,7 @@
 ﻿<h1>error</h1>
-@ViewBag.messgae
+@{
+    //Layout = null;
+}
+<h2>Error Occurred</h2>
+<p><strong>Message:</strong> @ViewBag.ErrorMessage</p>
+<pre>@ViewBag.StackTrace</pre>

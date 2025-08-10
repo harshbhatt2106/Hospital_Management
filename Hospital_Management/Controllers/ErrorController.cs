@@ -12,14 +12,21 @@ public class ErrorController : Controller
         this.logger = logger;
     }
 
-    [Route("/Error/General")]
+    [Route("Error/General")]
     [AllowAnonymous]
-
     public IActionResult General()
     {
         var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
-        logger.LogError($"the path {exceptionFeature.Path} throw execption {exceptionFeature.Path}");
-        ViewBag.messgae = $"the path {exceptionFeature.Path} throw execption {exceptionFeature.Path} error messgae is {exceptionFeature.Error.Message}";
+
+        if (exceptionFeature?.Error != null)
+        {
+            ViewBag.StackTrace = exceptionFeature.Error.StackTrace;
+        }
+        else
+        {
+            ViewBag.ErrorMessage = "Unknown error occurred.";
+            ViewBag.StackTrace = string.Empty;
+        }
         return View();
     }
 

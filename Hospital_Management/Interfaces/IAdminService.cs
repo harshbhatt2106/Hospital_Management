@@ -7,6 +7,7 @@ namespace Hospital_Management.Interfaces
         //bool Logout(int adminID);
         //bool DeleteAdmin(Admin admin);
 
+        int AdminAuthanticate(string UserName, string Password);
         int UpdateAdmin(User admin,int UserID);
         bool AddAdmin(User admin);
         List<User> GetAdmins();

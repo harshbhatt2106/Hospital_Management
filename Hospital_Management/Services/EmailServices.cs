@@ -4,7 +4,7 @@ using System.Net.Mail;
 
 namespace Hospital_Management.Services
 {
-    public class EmailServices:IEmailservice
+    public class EmailServices : IEmailservice
     {
         private readonly IConfiguration _config;
         public EmailServices(IConfiguration configuration)
@@ -30,10 +30,9 @@ namespace Hospital_Management.Services
                 Body = body,
                 IsBodyHtml = true,
             };
-            mailMessage.To.Add(toEmail);
-
             try
             {
+                mailMessage.To.Add(toEmail);
                 smtpClient.SendMailAsync(mailMessage);
                 return true;
             }
@@ -41,6 +40,6 @@ namespace Hospital_Management.Services
             {
                 return false;
             }
-        } 
+        }
     }
 }

@@ -3,33 +3,66 @@
     ViewData["Title"] = "Add Admin";
 }
 
-<div class="container-fluid mt-4">
-    <div class="row">        
-        <div class="col-md-5 bg-light p-4 rounded shadow">
-            <h3>Add New Admin</h3>
-            <form asp-action="AddAdmin" method="post">
-                <div class="form-group mb-2">
-                    <label asp-for="UserName"></label>
-                    <input asp-for="UserName" class="form-control" />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white rounded-top-4 text-center">
+                    <h4 class="mb-0">Add New Admin</h4>
                 </div>
+                <div class="card-body p-4">
+                    <form asp-action="AddAdmin" method="post">
 
-                <div class="form-group mb-2">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" class="form-control" type="password" />
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label"></label>
+                            <input asp-for="UserName" class="form-control" placeholder="Enter admin username" required />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MobileNo" class="form-label"></label>
+                            <input asp-for="MobileNo" id="mobilenumber" class="form-control" placeholder="Enter mobile number" required />
+                            <span asp-validation-for="MobileNo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" id="email" class="form-control" type="email" placeholder="Enter email address" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- OTP Textbox -->
+                        <div class="mb-3">
+                            <label>Enter OTP</label>
+                            <input type="text" name="OtpCode" id="otp" class="form-control" placeholder="Enter OTP from Gmail" />
+                        </div>
+
+                        <!-- Submit Final Form -->
+                        <button type="submit" id="AddAdminBtn" class="btn btn-primary w-100 py-2">
+                            Add Admin
+                        </button>
+
+                    </form>
+
+                    <!-- Send OTP Button -->
+                    <div class="mb-3">
+                        <button type="submit" id="SendOtpBtn" class="btn btn-warning w-100 py-2">
+                            Send Gmail OTP
+                        </button>
+                    </div>
+
                 </div>
-
-                <div class="form-group mb-2">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" />
-                </div>
-
-                <div class="form-group mb-2">
-                    <label asp-for="MobileNo"></label>
-                    <input asp-for="MobileNo" class="form-control" />
-                </div>
-
-                <button type="submit" class="btn btn-primary">Add Admin</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+<script type="text/javascript" asp-append-version="true" src="~/js/addadmin.js"></script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

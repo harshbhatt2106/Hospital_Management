@@ -1,8 +1,4 @@
-﻿using Hospital_Management.Data;
-using Hospital_Management.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Hospital_Management.Services
+﻿namespace Hospital_Management.Services
 {
     public class OTPServices : IotpService
     {
@@ -22,8 +18,9 @@ namespace Hospital_Management.Services
         public bool SendOTP(string gmail)
         {
             int OTP = new Random().Next(100000, 999999);
-            _content.HttpContext.Session.SetInt32("AdminOTP", OTP);
-            _content.HttpContext.Session.SetString("ForgetPasswordProgress", "True");
+            _content?.HttpContext?.Session.SetInt32("AdminOTP", OTP);
+            _content?.HttpContext?.Session.SetString("ForgetPasswordProgress", "True");
+            _content?.HttpContext?.Session.SetString("ExpiryTimeOfSession", DateTime.Now.AddMinutes(1).ToString("O"));
 
             string Subject_of_ForgetEmail = "Your Admin Account OTP for Password Reset"; ;
             string body = $@"
@@ -34,6 +31,7 @@ namespace Hospital_Management.Services
                         <p>Please enter this OTP on the verification screen to proceed.</p>
                         <p>If you did not request this, please ignore this email.</p>
                         <p>This OTP valid 1 Time </p> 
+                        <p>This OTP valid till  {DateTime.Now.AddSeconds(10)} </p> 
                         <br/>
                         <p>Thanks,<br/>Hospital Management Team</p>
                     ";
@@ -41,24 +39,29 @@ namespace Hospital_Management.Services
             return emailservices.SendEmail(gmail, Subject_of_ForgetEmail, body);
         }
 
-        public bool VerifyGmail(string gmailid)
-        {
-            return true;
-        }
 
-
-        public bool VerifyOTP([FromBody] int otp, int UserEnterdOTP)
+        public (bool isExpiry, bool isValid) verify_OTP(int otp, int UserEnterdOTP)
         {
+            string? dateTime = _content?.HttpContext?.Session.GetString("ExpiryTimeOfSession");
+
+            DateTime? dateTime1 = DateTime.Parse(dateTime);
+
+            if (string.IsNullOrEmpty(dateTime))
+            {
+                return (true, false);
+            }
+
+            if (DateTime.Now > dateTime1)
+            {
+                // otp expiry
+                return (true, false);
+            }
             if (otp != UserEnterdOTP)
             {
-                return false;
+                // otp false
+                return (false, false);
             }
-            return true;
-        }
-
-        void IotpService.VerifyGmail(string gmailid)
-        {
-            throw new NotImplementedException();
+            return (false, true);
         }
     }
 }

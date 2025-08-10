@@ -28,6 +28,7 @@
             return View();
         }
 
+
         [Route("/Admin/AdminProfile")]
         public IActionResult Profile()
         {
@@ -49,7 +50,7 @@
         [HttpGet]
         public IActionResult Login()
         {
-            if (SessionUtility.GetAdminID() > 0)
+            if (SessionUtility.GetCurrentUserID() > 0)
             {
                 return View("AdminDashboard");
             }
@@ -66,10 +67,10 @@
         {
             try
             {
-                User admin = Helper_Method.CheckLogin(Password, UserName);
-                if (admin != null)
+                int adminID = adminServices.AdminAuthanticate(UserName, Password);
+                if (adminID > 0)
                 {
-                    HttpContext.Session.SetInt32("UserID", admin.UserID);
+                    HttpContext.Session.SetInt32("UserID", adminID);
                     return RedirectToAction("AdminDashboard", "Admin");
                 }
                 else
@@ -105,12 +106,11 @@
         }
 
         [HttpGet]
+        [Route("/Password/ForgetPassword")]
         public IActionResult Forgetpassword()
         {
-            return View();
+            return View("~/Views/Password/Forgetpassword.cshtml");
         }
-
-
 
         [Route("/Admin/SendOTP")]
         [HttpPost]
@@ -122,28 +122,20 @@
         }
 
 
-        [Route("/Admin/VerifyGmail")]
-        [HttpPost]
-        public JsonResult VerifyGmail([FromBody] string Email)
-        {
-            bool IsGamilValid = adminServices.GetAdmins().Any(x => x.Email.ToLower() == Email.ToLower());
-            TempData["Gmail"] = Email;
-            return Json(new { success = IsGamilValid });
-        }
-
         [HttpGet]
-        [Route("/Admin/ResetPassword")]
+        [Route("/Password/ResetPassword")]
         public IActionResult ResetPassword()
         {
-            return View();
+            return View("~/Views/Password/ResetPassword.cshtml");
         }
 
 
         [HttpPost]
         public IActionResult ResetPassword(string Password)
         {
-            int? userID = SessionUtility.GetAdminID();
-            string gmail = TempData["Gmail"].ToString();
+            int? userID = SessionUtility.GetCurrentUserID();
+            string? gmail = TempData["Gmail"].ToString();
+
             bool result = passwordServices.UpdateUserForgetPassword(gmail, Password);
             if (result)
             {
@@ -153,7 +145,7 @@
             {
                 TempData["UpdatePasswordMessage"] = "Your Password Not be Updated";
             }
-            return View();
+            return View("~/Views/Password/ResetPassword.cshtml");
         }
 
         [HttpPost]
@@ -170,26 +162,49 @@
             return RedirectToAction("Profile");
         }
 
-        [Route("/Admin/VerifyOTP")]
-        public JsonResult VerifyOTP([FromBody] int userEnterOTP)
-        {
-            int generatedOTPBySystem = SessionUtility.GetOPT();
 
-            if (otpServices.VerifyOTP(generatedOTPBySystem, userEnterOTP))
+        [Route("/Admin/VerifyGmail")]
+        [HttpPost]
+        public JsonResult VerifyGmail([FromBody] string Email)
+        {
+            bool IsGamilValid = adminServices.GetAdmins().Any(x => x.Email.ToLower() == Email.ToLower());
+            TempData["Gmail"] = Email;
+            return Json(new { success = IsGamilValid });
+        }
+
+        [Route("/Admin/VerifyOTP")]
+        public JsonResult VerifOTP([FromBody] int userEnterOTP)
+        {
+
+            int generatedOTPBySystem = SessionUtility.GetOPT();
+            var (isExpiry, isValid) = otpServices.verify_OTP(generatedOTPBySystem, userEnterOTP);
+
+            if (isExpiry)
             {
                 return Json(new
                 {
-                    _VerifyOTP = true
+                    _VerifyOTP = false,
+                    reason = "OTP Expired Resend OTP"
+                });
+            }
+            if (!isValid)
+            {
+                return Json(new
+                {
+                    _VerifyOTP = false,
+                    reason = "OTP Wrong"
                 });
             }
             else
             {
                 return Json(new
                 {
-                    _VerifyOTP = false
+                    _VerifyOTP = true,
+                    reason = "Verification Complete"
                 });
             }
         }
+
 
         [HttpGet]
         public IActionResult UpdateAdmin(int id)
@@ -207,7 +222,7 @@
             }
             else
             {
-                return Ok("data not Updated");   
+                return Ok("data not Updated");
             }
         }
     }

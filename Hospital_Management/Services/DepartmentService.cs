@@ -8,6 +8,7 @@ namespace Hospital_Management.Services
 
     public class DepartmentService : IDepartmentService
     {
+        
         private List<Department> _departments = new();
 
         public List<Department> departments()
@@ -115,5 +116,6 @@ namespace Hospital_Management.Services
             int departemntCount = DBHelper.ExecuteScaler(procedure);
             return departemntCount;
         }
+
     }
 }

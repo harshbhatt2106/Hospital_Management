@@ -6,6 +6,7 @@ namespace Hospital_Management.Services
     public class PasswordServices : IPasswordService
     {
         private readonly HospitalDbContext _context;
+
         public PasswordServices(HospitalDbContext hospitalDbContext)
         {
             _context = hospitalDbContext;      
@@ -45,16 +46,17 @@ namespace Hospital_Management.Services
             try
             {
                 var data = _context.Users.FirstOrDefault(x => x.Email == Gmail);
+                if (data == null)
+                    return false;
+
                 data.Password = password;
-                bool result = _context.SaveChanges() > 0 ? true : false;
+                bool result = _context.SaveChanges() > 0;
                 return result;
             }
             catch
             {
                 throw;
             }
-
-        }
-        
+        }    
     }
 }
