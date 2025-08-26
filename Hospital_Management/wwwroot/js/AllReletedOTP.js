@@ -1,5 +1,6 @@
 ﻿
-export async function VerificationGmail(gmail) {
+export async function VerificationGmail(gmail)
+{
     try {
         const res = await fetch("/Admin/VerifyGmail",
             {
@@ -20,7 +21,8 @@ export async function VerificationGmail(gmail) {
     }
 }
 
-export async function SendOTP(gmail) {
+export async function SendOTP(gmail)
+{
     try {
 
         const res = await fetch("/Admin/SendOTP",
@@ -42,8 +44,7 @@ export async function SendOTP(gmail) {
 }
 
 export async function VeryfiOTP(_otp)
-{
-    
+{    
     // veryfy otp ajax call
     const res = await fetch("/Admin/VerifyOTP",
         {

@@ -20,7 +20,7 @@ public class ErrorController : Controller
 
         if (exceptionFeature?.Error != null)
         {
-            ViewBag.StackTrace = exceptionFeature.Error.StackTrace;
+            ViewBag.StackTrace = exceptionFeature.Error.Message;
         }
         else
         {

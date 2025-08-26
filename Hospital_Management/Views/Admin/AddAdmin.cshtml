@@ -3,66 +3,133 @@
     ViewData["Title"] = "Add Admin";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-5 col-md-7">
-            <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-primary text-white rounded-top-4 text-center">
-                    <h4 class="mb-0">Add New Admin</h4>
+<style>
+    body {
+        background: #f5f7fa;
+    }
+
+    .form-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        overflow: hidden;
+        max-width: 900px;
+        margin: 40px auto;
+    }
+
+    .form-header {
+        background: #0d6efd;
+        color: white;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .form-body {
+        padding: 20px;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        font-size: 0.95rem;
+        padding: 0.55rem 0.75rem;
+    }
+
+    .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 15px 20px;
+        background: #f9f9f9;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-save {
+        background: #198754;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-weight: 500;
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-weight: 500;
+    }
+
+    .btn i {
+        margin-right: 6px;
+    }
+</style>
+
+<div class="form-card">
+    <div class="form-header">
+        Add New Admin
+    </div>
+    <form asp-action="AddAdmin" method="post">
+        <div class="form-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="form-label"></label>
+                    <input asp-for="UserName" class="form-control" placeholder="Enter admin username" required />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
-                <div class="card-body p-4">
-                    <form asp-action="AddAdmin" method="post">
 
-                        <div class="mb-3">
-                            <label asp-for="UserName" class="form-label"></label>
-                            <input asp-for="UserName" class="form-control" placeholder="Enter admin username" required />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" type="password" placeholder="Enter password" required />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
+                <div class="col-md-6">
+                    <label asp-for="MobileNo" class="form-label"></label>
+                    <input asp-for="MobileNo" id="mobilenumber" class="form-control" placeholder="Enter mobile number" required />
+                    <span asp-validation-for="MobileNo" class="text-danger"></span>
+                </div>
 
-                        <div class="mb-3">
-                            <label asp-for="MobileNo" class="form-label"></label>
-                            <input asp-for="MobileNo" id="mobilenumber" class="form-control" placeholder="Enter mobile number" required />
-                            <span asp-validation-for="MobileNo" class="text-danger"></span>
-                        </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" id="email" type="email" class="form-control" placeholder="Enter email address" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" id="email" class="form-control" type="email" placeholder="Enter email address" required />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
+                <!-- OTP - Hidden by default -->
+                <div class="col-md-6 d-none" id="otpSection">
+                    <label>Enter OTP</label>
+                    <input type="text" name="OtpCode" id="otp" class="form-control" placeholder="Enter OTP from Gmail" />
+                </div>
 
-                        <!-- OTP Textbox -->
-                        <div class="mb-3">
-                            <label>Enter OTP</label>
-                            <input type="text" name="OtpCode" id="otp" class="form-control" placeholder="Enter OTP from Gmail" />
-                        </div>
-
-                        <!-- Submit Final Form -->
-                        <button type="submit" id="AddAdminBtn" class="btn btn-primary w-100 py-2">
-                            Add Admin
-                        </button>
-
-                    </form>
-
-                    <!-- Send OTP Button -->
-                    <div class="mb-3">
-                        <button type="submit" id="SendOtpBtn" class="btn btn-warning w-100 py-2">
-                            Send Gmail OTP
-                        </button>
-                    </div>
-
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="button" id="SendOtpBtn" class="btn btn-warning w-100">
+                        <i class="fas fa-envelope"></i> Send Gmail OTP
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="form-footer">
+            <button type="submit" id="AddAdminBtn" class="btn btn-save">
+                <i class="fas fa-user-plus"></i> Add Admin
+            </button>
+            <a href="#" class="btn btn-cancel">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
 </div>
+
+
 <script type="text/javascript" asp-append-version="true" src="~/js/addadmin.js"></script>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

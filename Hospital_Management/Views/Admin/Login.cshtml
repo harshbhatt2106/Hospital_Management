@@ -179,8 +179,14 @@
                 @{
                     if (TempData["IsLogin"] != null)
                     {
-                        <div class="alert alert-danger mt-3" role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" id="tempMessage">
                             @TempData["IsLogin"]
+                        </div>
+                    }
+                    if (TempData["ResetPasswordMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" id="tempMessage">
+                            @TempData["ResetPasswordMessage"]
                         </div>
                     }
                 }

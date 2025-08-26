@@ -14,16 +14,9 @@
 
         public bool AddAdmin(User admin)
         {
-            admin.Created = DateTime.Now;
+            admin.Created = DateTime.UtcNow;
             _context.Users.Add(admin);
-            if (_context.SaveChanges() > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return _context.SaveChanges() > 0;            
         }
 
         public int AdminAuthanticate(string UserName, string Password)
@@ -109,7 +102,7 @@
             }
             try
             {
-                _context.Update(existingUser);
+                //_context.Update(existingUser);
                 int IsUpdate = _context.SaveChanges();
                 return IsUpdate;
             }

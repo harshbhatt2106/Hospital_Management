@@ -1,4 +1,6 @@
-﻿namespace Hospital_Management.Services
+﻿using System.Threading.Tasks;
+
+namespace Hospital_Management.Services
 {
     public class OTPServices : IotpService
     {
@@ -15,7 +17,7 @@
             this.emailservices = emailservices;
         }
 
-        public bool SendOTP(string gmail)
+        public async Task<bool> SendOTP(string gmail)
         {
             int OTP = new Random().Next(100000, 999999);
             _content?.HttpContext?.Session.SetInt32("AdminOTP", OTP);
@@ -36,32 +38,39 @@
                         <p>Thanks,<br/>Hospital Management Team</p>
                     ";
 
-            return emailservices.SendEmail(gmail, Subject_of_ForgetEmail, body);
+            return await emailservices.SendEmail(gmail, Subject_of_ForgetEmail, body);
         }
 
 
         public (bool isExpiry, bool isValid) verify_OTP(int otp, int UserEnterdOTP)
         {
-            string? dateTime = _content?.HttpContext?.Session.GetString("ExpiryTimeOfSession");
-
-            DateTime? dateTime1 = DateTime.Parse(dateTime);
-
-            if (string.IsNullOrEmpty(dateTime))
+            try
             {
-                return (true, false);
-            }
+                string? dateTime = _content?.HttpContext?.Session.GetString("ExpiryTimeOfSession");
 
-            if (DateTime.Now > dateTime1)
-            {
-                // otp expiry
-                return (true, false);
+                DateTime? dateTime1 = DateTime.Parse(dateTime);
+
+                if (string.IsNullOrEmpty(dateTime))
+                {
+                    return (true, false);
+                }
+
+                if (DateTime.Now > dateTime1)
+                {
+                    // otp expiry
+                    return (true, false);
+                }
+                if (otp != UserEnterdOTP)
+                {
+                    // otp false
+                    return (false, false);
+                }
+                return (false, true);
             }
-            if (otp != UserEnterdOTP)
+            catch
             {
-                // otp false
-                return (false, false);
+                throw;
             }
-            return (false, true);
         }
     }
 }

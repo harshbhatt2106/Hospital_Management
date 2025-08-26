@@ -1,10 +1,19 @@
-﻿@model Hospital_Management.Models.Department
+﻿<script>
+    
+    import { showLoader, hideLoader } from './loader.js';
 
-<form asp-action="tryview" method="post">
-<select asp-items="ViewBag.Departments"  asp-for="DepartmentId">
-    <option value="">
-        select
-    </option>
-</select>
-    <button type="submit">Clikc</button>
-</form>
+    const show = document.getElementById('show');
+    const hide = document.getElementById('hide');
+
+    show.addEventListener('click',()=>{
+        showLoader();
+    })
+    hide.addEventListener('click',()=>{
+        hideLoader();
+    })
+
+
+</script>
+
+<button id="show">show</button>
+<button id="hide">show</button>

@@ -1,0 +1,42 @@
+﻿@model List<Hospital_Management.Models.Patient>
+
+@{
+    ViewData["Title"] = "Patient List";
+}
+
+<h2 class="text-center my-3">Patient List</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Patient ID</th>
+            <th>Name</th>
+            <th>Date Of Birth</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.PatientId</td>
+                    <td>@patient.Name</td>
+                    <td>@patient.DateOfBirth.ToString("dd-MMM-yyyy")</td>
+                    <td>@patient.Gender</td>
+                    <td>@patient.Email</td>
+                    <td>@patient.Phone</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center text-danger">No patients found</td>
+            </tr>
+        }
+    </tbody>
+</table>

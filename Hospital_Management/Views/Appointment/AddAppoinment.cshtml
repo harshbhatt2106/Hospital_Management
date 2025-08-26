@@ -1,0 +1,147 @@
+﻿@model Appointment
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Appointment - Hospital Management</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #0d6efd;
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .form-label.required::after {
+            content: "*";
+            color: red;
+            margin-left: 3px;
+        }
+
+        .form-footer {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+            .form-footer button {
+                min-width: 120px;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-section">
+            <h4 class="section-title"><i class="bi bi-calendar-plus me-2"></i>Make Appointment</h4>
+            <form asp-action="MakeAppointment" method="post">
+
+                <div class="mb-3 position-relative">
+                    <label class="form-label required">Patient Name</label>
+                    <input type="text" class="form-control" id="PatientNameSearchBox" placeholder="Enter Patient Name" autocomplete="off">
+
+                    <!-- Dropdown List -->
+                    <ul class="list-group shadow-sm" id="PatientList"
+                        style="position:absolute; top:100%; left:0; right:0; z-index:1050; display:none ; max-height:200px; overflow-y:auto;">
+                        @* <li class="list-group-item list-group-item-action">John Doe</li>
+                        <li class="list-group-item list-group-item-action">Jane Smith</li>
+                        <li class="list-group-item list-group-item-action">Alex Kumar</li>
+                        <li class="list-group-item list-group-item-action">Mary Johnson</li> *@
+                    </ul>
+
+                </div>
+
+                <!-- Auto-fill Patient Info -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="PatientPhone">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="PatientEmail">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" id="PatientAddress">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" id="PatientCity">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control" id="PatientState">
+                    </div>
+                </div>
+
+                <!-- Doctor & Department Dropdown -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Select Doctor</label>
+                        <select class="form-select" id="DoctorDropdown">
+                            <option value="" selected>--SelectDoctor--</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Select Department</label>
+                        <select class="form-select" id="DepartmentDropdown">
+                            <option value="" selected>-- Select Department --</option>
+                            @foreach (var data in ViewBag.DoctorsDDL)
+                            {
+                                <option value="@data.DoctorId">@data.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Appointment Date & Time -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Appointment Date</label>
+                        <input type="date" class="form-control" id="AppointmentDate">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label required">Appointment Time</label>
+                        <input type="time" class="form-control" id="AppointmentTime">
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i> Book Appointment</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" asp-append-version="true" src="~/js/addappoiment.js"></script>
+</body>
+</html>

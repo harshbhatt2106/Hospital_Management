@@ -1,6 +1,4 @@
-﻿
-
-namespace Hospital_Management.Controllers
+﻿namespace Hospital_Management.Controllers
 {
     public class DoctorController : Controller
     {

@@ -1,9 +1,4 @@
-using Hospital_Management.CommonMethod_Class;
 using Hospital_Management.CustomMiddleware;
-using Hospital_Management.Data;
-using Hospital_Management.Interfaces;
-using Hospital_Management.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management
 {
@@ -33,6 +28,8 @@ namespace Hospital_Management
             builder.Services.AddScoped<IDoctorDepartment, DoctorDepartmentService>();
             builder.Services.AddScoped<IPasswordService,PasswordServices>();
             builder.Services.AddScoped<IotpService,OTPServices>();
+            builder.Services.AddScoped<IPatient,PatientServices>();
+            builder.Services.AddScoped<IAppoiment,AppoimentServices>();
             
             var app = builder.Build();
             

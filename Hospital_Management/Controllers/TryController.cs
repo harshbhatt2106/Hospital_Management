@@ -12,27 +12,9 @@ namespace Hospital_Management.Controllers
         {
             this.hospitalDbContext = hospitalDbContext; 
         }
-        public IActionResult tryview()
-        {
-            List<SelectListItem> list = new List<SelectListItem>();
-            var department = hospitalDbContext.Departments.ToList();
 
-            list = department.Select(d=> new SelectListItem
-            {
-                Text = d.DepartmentName,
-                Value = d.DepartmentId.ToString(),
-            }).ToList();
-
-            ViewBag.Departments = list;
-
-            return View("trynav");
-        }
-
-        [HttpPost]
         public IActionResult tryview(Department department)
         {
-            var data = department.DepartmentId;
-            var name = department.DepartmentName;
             return View("trynav");
         }
     }

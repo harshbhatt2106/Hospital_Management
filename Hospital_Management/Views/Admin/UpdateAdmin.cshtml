@@ -4,41 +4,43 @@
     ViewData["Title"] = "Update Admin";
 }
 
-<div class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
-        <h2 class="text-2xl font-bold text-center text-blue-700 mb-6">Update Admin Details</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">Update Admin Profile</h4>
+            <small>Update your administrative account details</small>
+        </div>
+        <div class="card-body">
+            <form asp-action="UpdateAdmin" asp-controller="Admin" method="post">
+                <input type="hidden" asp-for="UserID" />
 
-        <form asp-action="UpdateAdmin" asp-controller="Admin" method="post" class="space-y-5">
-            <input type="hidden" asp-for="UserID" />
+                <!-- Username -->
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label">Username</label>
+                    <input asp-for="UserName" class="form-control" placeholder="e.g. admin123" required />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
 
-            <div>
-                <label asp-for="UserName" class="block mb-1 text-sm font-medium text-gray-700">Username</label>
-                <input asp-for="UserName" placeholder="Enter your name"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-                <span asp-validation-for="UserName" class="text-sm text-red-500 mt-1 block"></span>
-            </div>
+                <!-- Mobile Number -->
+                <div class="mb-3">
+                    <label asp-for="MobileNo" class="form-label">Mobile Number</label>
+                    <input asp-for="MobileNo" class="form-control" placeholder="e.g. +91 9876543210" required />
+                    <span asp-validation-for="MobileNo" class="text-danger"></span>
+                </div>
 
-            <div>
-                <label asp-for="MobileNo" class="block mb-1 text-sm font-medium text-gray-700">Mobile Number</label>
-                <input asp-for="MobileNo" placeholder="Enter your mobile number"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-                <span asp-validation-for="MobileNo" class="text-sm text-red-500 mt-1 block"></span>
-            </div>
+                <!-- Email -->
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email Address</label>
+                    <input asp-for="Email" class="form-control" placeholder="e.g. admin@hospital.com" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-            <div>
-                <label asp-for="Email" class="block mb-1 text-sm font-medium text-gray-700">Email</label>
-                <input asp-for="Email" placeholder="Enter your email"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-                <span asp-validation-for="Email" class="text-sm text-red-500 mt-1 block"></span>
-            </div>
-
-            <div class="text-center">
-                <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-md shadow-sm transition duration-200">
-                    Update
-                </button>
-            </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary px-4">Update Profile</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

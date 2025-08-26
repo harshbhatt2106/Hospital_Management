@@ -158,8 +158,8 @@ namespace Hospital_Management.Data
                 entity.Property(e => e.Modified).HasColumnType("datetime")
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
-                
-                
+
+
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -247,7 +247,9 @@ namespace Hospital_Management.Data
 
                 entity.Property(e => e.MobileNo).HasMaxLength(100);
 
-                entity.Property(e => e.Modified).HasColumnType("datetime");
+                entity.Property(e => e.Modified)
+                .HasColumnType("datetime");
+                
 
                 entity.Property(e => e.Password).HasMaxLength(100);
 

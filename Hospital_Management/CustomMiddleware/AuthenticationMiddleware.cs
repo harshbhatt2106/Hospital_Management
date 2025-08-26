@@ -18,7 +18,7 @@
                     "/admin/verifygmail",
                     "/admin/sendotp",
                     "/admin/verifyotp",
-                    "/password/ResetPassword"
+                    "/Password/ResetPassword"
                 };
 
             string path = context.Request.Path.Value?.ToLowerInvariant() ?? "/admin/login";

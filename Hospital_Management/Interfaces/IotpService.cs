@@ -2,7 +2,7 @@
 {
     public interface IotpService
     {
-        public bool SendOTP(string gmail);
+        public Task<bool> SendOTP(string gmail);
         public (bool isExpiry, bool isValid) verify_OTP(int otp,int UserEnterdOTP);
     }
 }

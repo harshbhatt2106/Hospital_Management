@@ -1,4 +1,6 @@
-﻿namespace Hospital_Management.Controllers
+﻿using System.Threading.Tasks;
+
+namespace Hospital_Management.Controllers
 {
     public class AdminController : Controller
     {
@@ -16,7 +18,7 @@
                                IPasswordService passwordServices,
                                IotpService otpServices)
         {
-            this.adminServices = _adminServices;
+            adminServices = _adminServices;
             this.doctorServices = doctorServices;
             this.departmentServices = departmentServices;
             this.emailservices = emailservices;
@@ -114,10 +116,10 @@
 
         [Route("/Admin/SendOTP")]
         [HttpPost]
-        public JsonResult SendOTP([FromBody] string Email)
+        public async Task<JsonResult> SendOTP([FromBody] string Email)
         {
             // send into Email
-            bool IsMailSendSuccess = otpServices.SendOTP(Email);
+            bool IsMailSendSuccess = await  otpServices.SendOTP(Email);
             return Json(new { success = IsMailSendSuccess });
         }
 
@@ -131,14 +133,14 @@
 
 
         [HttpPost]
+        [Route("/Password/ResetPassword")]
         public IActionResult ResetPassword(string Password)
         {
-            int? userID = SessionUtility.GetCurrentUserID();
-            string? gmail = TempData["Gmail"].ToString();
-
+            string? gmail = TempData["Gmail"] as string;
             bool result = passwordServices.UpdateUserForgetPassword(gmail, Password);
             if (result)
             {
+                TempData["ResetPasswordMessage"] = "Password updated successfully!";
                 return RedirectToAction("Login", "Admin");
             }
             else
