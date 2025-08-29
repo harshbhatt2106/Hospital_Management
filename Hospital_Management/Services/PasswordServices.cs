@@ -5,11 +5,12 @@ namespace Hospital_Management.Services
 {
     public class PasswordServices : IPasswordService
     {
+        
         private readonly HospitalDbContext _context;
 
         public PasswordServices(HospitalDbContext hospitalDbContext)
         {
-            _context = hospitalDbContext;      
+            _context = hospitalDbContext;
         }
 
         public bool UpdatePasswordfAdmin(int id, string newpassword, string password, string EnterdOldPassword)
@@ -57,6 +58,7 @@ namespace Hospital_Management.Services
             {
                 throw;
             }
-        }    
+        }
+
     }
 }

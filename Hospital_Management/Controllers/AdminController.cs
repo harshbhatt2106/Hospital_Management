@@ -207,7 +207,6 @@ namespace Hospital_Management.Controllers
             }
         }
 
-
         [HttpGet]
         public IActionResult UpdateAdmin(int id)
         {

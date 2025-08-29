@@ -24,8 +24,8 @@ namespace Hospital_Management.Controllers
         public IActionResult AddPatient(Patient patient)
         {
             patient.UserId = SessionUtility.GetCurrentUserID();
-            bool result = _patientservices.addPatient(patient);
-            if (result)
+            int result = _patientservices.addPatient(patient);
+            if (result > 0)
             {
                 TempData["PatientAddMessage"] = "Patient add SuccessFully";
                 TempData["MessageType"] = "Success";

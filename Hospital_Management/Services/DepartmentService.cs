@@ -8,7 +8,12 @@ namespace Hospital_Management.Services
 
     public class DepartmentService : IDepartmentService
     {
-        
+        private readonly HospitalDbContext hospitalDbContext;
+
+        public DepartmentService(HospitalDbContext hospitalDbContext)
+        {
+            this.hospitalDbContext = hospitalDbContext;            
+        }
         private List<Department> _departments = new();
 
         public List<Department> departments()
@@ -117,5 +122,17 @@ namespace Hospital_Management.Services
             return departemntCount;
         }
 
+        public List<Department> SearchDepartmentByDoctorID(int DoctorID)
+        {
+            List<Department> departments = new List<Department>();
+            var Department = hospitalDbContext.DoctorDepartments
+                .Where(dd => dd.DoctorId == DoctorID)
+                .Include(d=>d.Department)
+                .Select(d=>d.Department)
+                .ToList();
+
+            departments = Department;
+            return departments;
+        }
     }
 }

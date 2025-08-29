@@ -15,6 +15,7 @@ namespace Hospital_Management.Models
         public string? Name { get; set; } = null!;
         [Required]
         public DateTime DateOfBirth { get; set; }
+        
         [Required]
         public string? Gender { get; set; } = null!;
         public string? Email { get; set; } = null!;

@@ -11,5 +11,6 @@ namespace Hospital_Management.Interfaces
         bool DeleteDepartment(int departmentId);
         bool UpdateDepartment(Department department);
         int CountDepartments();
+        List<Department> SearchDepartmentByDoctorID(int DoctorID);
     }
 }

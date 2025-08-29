@@ -2,7 +2,12 @@
 {
     public interface IPatient
     {
-        public bool addPatient(Patient patient);
+        public int addPatient(Patient patient);
         public List<Patient> GetAllpatients();
+        bool IsPatientExits(string phone);
+
+        int GetPatientID(string phone);
+
+        Patient GetPatientByID(int id);
     }
 }

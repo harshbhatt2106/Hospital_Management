@@ -1,0 +1,27 @@
+﻿@model List<AppoimentViewModel>
+
+<h2>Appointments</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Patient Name</th>
+            <th>Doctor Name</th>
+            <th>Appointment Date</th>
+            <th>Appointment Time</th>
+            <th>Appointment Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Patient.Name</td>
+                <td>@item.doctors.FirstOrDefault()?.Name</td>
+                <td>@item.Appointment.AppointmentDate.ToShortDateString()</td>
+                <td>@item.AppointmentTime</td>
+                <td>@item.Appointment.AppointmentStatus</td>
+            </tr>
+        }
+    </tbody>
+</table>
